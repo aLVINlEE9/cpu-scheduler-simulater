@@ -1,20 +1,57 @@
 #ifndef CPU_SCHEDULER_H
 # define CPU_SCHEDULER_H
 
-typedef struct	input{
-	int			(*function)(struct input *);
-}				tinput;
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
 
-typedef struct	node{
-	int			data;
-	struct node	prev;
-	struct node	next;
-}				tnode;
+/*
+	process state
+*/
 
-typedef struct	rdque{
-	int			count;
-	tnode		head;
-	tnode		tail;
-}				trdque;
+typedef enum e_process_state
+{
+	NEW = 0,
+	READY,
+	RUNNING,
+	WAITING,
+	TERMINATED
+}	process_state;
+
+/*
+	process_table_node
+*/
+
+typedef struct s_process_table_node
+{
+	struct s_process_table_node	*next;
+	struct s_process_table_node	*prev;
+	pid_t						pid;
+}	t_process_table_node;
+
+/*
+	process_table(dummy node)
+*/
+typedef struct s_process_table
+{
+	t_process_table_node	*head;
+	t_process_table_node	*tail;
+	int						count;
+}	t_process_table;
+
+/*
+	PCB
+*/
+
+typedef struct s_PCB
+{
+	pid_t			pid;
+	int				user_id;
+	process_state	state;
+	// int				(* scheduling_algo)(struct s_PCB *)
+	register int	program_counter;
+	uint64_t		start
+}	t_PCB;
 
 #endif
