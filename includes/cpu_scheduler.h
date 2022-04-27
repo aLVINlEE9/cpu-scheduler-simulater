@@ -7,6 +7,10 @@
 #include <sys/types.h>
 
 /*
+	Errors
+*/
+
+/*
 	process state
 */
 
@@ -20,6 +24,20 @@ typedef enum e_process_state
 }	process_state;
 
 /*
+	PCB
+*/
+
+typedef struct s_PCB
+{
+	pid_t			pid;
+	int				user_id;
+	process_state	state;
+	// int				(* scheduling_algo)(struct s_PCB *)
+	// register 		i;
+	uint64_t		start
+}	t_PCB;
+
+/*
 	process_table_node
 */
 
@@ -28,6 +46,7 @@ typedef struct s_process_table_node
 	struct s_process_table_node	*next;
 	struct s_process_table_node	*prev;
 	pid_t						pid;
+	t_PCB						*pcb;
 }	t_process_table_node;
 
 /*
@@ -40,18 +59,5 @@ typedef struct s_process_table
 	int						count;
 }	t_process_table;
 
-/*
-	PCB
-*/
-
-typedef struct s_PCB
-{
-	pid_t			pid;
-	int				user_id;
-	process_state	state;
-	// int				(* scheduling_algo)(struct s_PCB *)
-	register int	program_counter;
-	uint64_t		start
-}	t_PCB;
 
 #endif
