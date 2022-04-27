@@ -17,7 +17,7 @@
 		   : -a = arriving_time_for_each_processes
 		   : -pr = priority (PS required)
 		   : -t = time_quantum (RR required)
-	
+
 		input example : FCFS 5 -b 2 3 10 14 11 -a 0 0 0 0 0
 					  : RR 3 -b 2 3 10 -a 0 2 4 -t 5
 					  : PS 3 -pr 3 2 1
@@ -25,7 +25,7 @@
 
 int main(int argc, char **argv)
 {
-	t_process_table	process_table;
+	t_data	data;
 
-	init(argc, argv, &process_table);
+	init(argc, argv, &data);
 }
