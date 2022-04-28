@@ -1,7 +1,17 @@
 NAME	= cpu-scheduler
 CC		= gcc
 CFLAG	= -Werror -Wall -Wextra
-SRCS 	=	srcs/cpu_scheduler.c
+SRCS 	=	srcs/main.c				\
+			srcs/error.c			\
+			srcs/init_util.c		\
+			srcs/init.c				\
+			srcs/algorithm/FCFS.c	\
+			srcs/algorithm/HRN.c	\
+			scrs/algorithm/MFQ.c	\
+			srcs/algorithm/PS.c		\
+			srcs/algorithm/RR.c		\
+			srcs/algorithm/SJF.c	\
+			srcs/algorithm/SRTF.c
 
 OBJS 	= ${SRCS:.c=.o}
 INCLUDE	= -I./includes/

@@ -2,5 +2,7 @@
 
 int	MFQ(t_data *data)
 {
-	
+	(void)data;
+	printf("MFQ\n");
+	return (0);
 }

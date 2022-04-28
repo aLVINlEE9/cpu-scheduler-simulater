@@ -2,5 +2,7 @@
 
 int	RR(t_data *data)
 {
-	
+	(void)data;
+	printf("RR\n");
+	return (0);
 }

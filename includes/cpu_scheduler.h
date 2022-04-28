@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/types.h>
 
 /*
@@ -28,7 +29,7 @@ typedef struct s_PCB
 	int				user_id;
 	process_state	state;
 	// register 		i;
-	uint64_t		start
+	uint64_t		start;
 }	t_PCB;
 
 /*
@@ -60,25 +61,28 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
-	int				option_nums;
+	int				*option_nums; // [indexs ..]
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
-	int				*priority;
-	uint64_t		*time_quantum;
+	uint64_t		*priority;
+	uint64_t		time_quantum;
 }	t_data;
 
-int		FCFS(t_data *data);
-int		HRN(t_data *data);
-int		MFQ(t_data *data);
-int		PS(t_data *data);
-int		RR(t_data *data);
-int		SJF(t_data *data);
-int		SRTF(t_data *data);
+int			FCFS(t_data *data);
+int			HRN(t_data *data);
+int			MFQ(t_data *data);
+int			PS(t_data *data);
+int			RR(t_data *data);
+int			SJF(t_data *data);
+int			SRTF(t_data *data);
 
-void	error_print(char *err_msg);
+void		error_print(char *err_msg);
 
-int	is_not_num(char *argv);
+void		options_input(t_data *data, uint64_t *opt, char **argv, int idx);
+void		options_malloc(t_data *data);
+uint64_t	milli_to_micro(uint64_t milli);
+int			is_not_num(char *argv);
 
-void	init(int argc, char **argv, t_data *data);
+void		init(int argc, char **argv, t_data *data);
 
 #endif

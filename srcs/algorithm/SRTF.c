@@ -2,5 +2,7 @@
 
 int	SRTF(t_data *data)
 {
-	
+	(void)data;
+	printf("SRTF\n");
+	return (0);
 }

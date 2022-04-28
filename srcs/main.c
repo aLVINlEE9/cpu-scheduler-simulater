@@ -28,4 +28,16 @@ int main(int argc, char **argv)
 	t_data	data;
 
 	init(argc, argv, &data);
+	int i = -1;
+	data.scheduling_algo(&data);
+	while (++i < data.process_cores)
+	{
+		printf("burst_time\t%lld  ", data.burst_time[i]);
+		printf("arriving_time\t%lld  ", data.arriving_time[i]);
+		if (data.priority == NULL)
+			printf("no priority\n");
+		else
+			printf("priority\t%d  ", data.priority[i]);
+		printf("time_quantum\t%lld  ", data.time_quantum);
+	}
 }
