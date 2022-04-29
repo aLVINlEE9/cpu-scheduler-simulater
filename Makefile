@@ -1,5 +1,5 @@
 NAME	= cpu-scheduler
-CC		= gcc
+CC		= gcc -g
 CFLAG	= -Werror -Wall -Wextra
 SRCS 	=	srcs/main.c				\
 			srcs/error.c			\
@@ -7,7 +7,7 @@ SRCS 	=	srcs/main.c				\
 			srcs/init.c				\
 			srcs/algorithm/FCFS.c	\
 			srcs/algorithm/HRN.c	\
-			scrs/algorithm/MFQ.c	\
+			srcs/algorithm/MFQ.c	\
 			srcs/algorithm/PS.c		\
 			srcs/algorithm/RR.c		\
 			srcs/algorithm/SJF.c	\

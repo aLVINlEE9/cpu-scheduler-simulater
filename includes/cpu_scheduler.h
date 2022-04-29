@@ -9,6 +9,15 @@
 #include <sys/types.h>
 
 /*
+	define options
+*/
+
+#define BURST_TIME		10
+#define ARRIVING_TIME	11
+#define PRIORITY		12
+#define TIME_QUANTUM	13
+
+/*
 	process state
 */
 typedef enum e_process_state
@@ -61,7 +70,8 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
-	int				*option_nums; // [indexs ..]
+	int				option_count;
+	int				**option_info; // [[indexs, type], ..]
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
 	uint64_t		*priority;
@@ -78,8 +88,10 @@ int			SRTF(t_data *data);
 
 void		error_print(char *err_msg);
 
-void		options_input(t_data *data, uint64_t *opt, char **argv, int idx);
-void		options_malloc(t_data *data);
+void		random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j);
+void		option_put(char **argv, int *options, t_data *data);
+void		option_algo_check(t_data *data);
+void		option_count(int argc, char **argv, t_data *data);
 uint64_t	milli_to_micro(uint64_t milli);
 int			is_not_num(char *argv);
 

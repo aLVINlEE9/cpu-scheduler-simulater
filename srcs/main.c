@@ -35,9 +35,10 @@ int main(int argc, char **argv)
 		printf("burst_time\t%lld  ", data.burst_time[i]);
 		printf("arriving_time\t%lld  ", data.arriving_time[i]);
 		if (data.priority == NULL)
-			printf("no priority\n");
+			printf("no priority\t");
 		else
-			printf("priority\t%d  ", data.priority[i]);
+			printf("priority\t%lld  ", data.priority[i]);
 		printf("time_quantum\t%lld  ", data.time_quantum);
+		printf("\n");
 	}
 }
