@@ -1,9 +1,9 @@
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-
 #include <stdio.h>
-#include <inttypes.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
 
 int main()
 {
@@ -11,6 +11,7 @@ int main()
 	int i = 0;
 
 	a = 0;
-	printf("%d\n", a == NULL);
+	srand(time(NULL));
+	printf("%d\n", rand() % 10 + 1);
 }
 

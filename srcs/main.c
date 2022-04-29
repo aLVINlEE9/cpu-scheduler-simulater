@@ -23,23 +23,32 @@
 					  : PS 3 -pr 3 2 1
 */
 
+void	print_scheduling_info(t_data *data)
+{
+	int i = -1;
+
+	printf("\n\n####################\t\tcpu scheduling information\t\t####################\n\n\n");
+	while (++i < data->process_cores)
+	{
+		printf("PROCESS %d : \t", i + 1);
+		printf("burst_time\t%lld  ", data->burst_time[i]);
+		printf("arriving_time\t%lld  ", data->arriving_time[i]);
+		if (data->priority == NULL)
+			printf("no priority\t");
+		else
+			printf("priority\t%lld  ", data->priority[i]);
+		printf("time_quantum\t%lld  ", data->time_quantum);
+		printf("\n");
+	}
+	printf("\n");
+}
+
 int main(int argc, char **argv)
 {
 	t_data	data;
 
+	srand(time(NULL));
 	init(argc, argv, &data);
-	int i = -1;
-	data.scheduling_algo(&data);
-	while (++i < data.process_cores)
-	{
-		printf("burst_time\t%lld  ", data.burst_time[i]);
-		printf("arriving_time\t%lld  ", data.arriving_time[i]);
-		if (data.priority == NULL)
-			printf("no priority\t");
-		else
-			printf("priority\t%lld  ", data.priority[i]);
-		printf("time_quantum\t%lld  ", data.time_quantum);
-		printf("\n");
-	}
+	print_scheduling_info(&data);
 	exit(0);
 }

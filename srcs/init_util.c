@@ -10,7 +10,7 @@ void	random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j)
 	while (k < loop)
 	{
 		if (i == 0)
-			arr[k] = milli_to_micro(rand() % (j + 1));
+			arr[k] = milli_to_micro(rand() % j + 1);
 		else if (i == 1)
 			arr[k] = rand() % j + 1;
 		m = 0;
@@ -56,7 +56,7 @@ void	option_random_sub(int type, t_data *data)
 		random_gen(data->priority, data->process_cores, 1, 5);
 	}
 	else if (type == TIME_QUANTUM)
-		data->time_quantum = rand() % 10 + 1;
+		data->time_quantum = milli_to_micro(rand() % 10 + 1);
 }
 
 void	option_random(t_data *data)
