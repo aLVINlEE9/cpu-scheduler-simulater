@@ -8,6 +8,9 @@
 #include <time.h>
 #include <sys/types.h>
 
+#define FALSE			0
+#define TRUE			1
+
 /*
 	define options
 */
@@ -72,6 +75,7 @@ typedef struct s_data
 	int				(* scheduling_algo)(struct s_data *);
 	int				option_count;
 	int				**option_info; // [[indexs, type], ..]
+	int				*option_v;
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
 	uint64_t		*priority;
@@ -89,6 +93,7 @@ int			SRTF(t_data *data);
 void		error_print(char *err_msg);
 
 void		random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j);
+void		option_random(t_data *data);
 void		option_put(char **argv, int *options, t_data *data);
 void		option_algo_check(t_data *data);
 void		option_count(int argc, char **argv, t_data *data);

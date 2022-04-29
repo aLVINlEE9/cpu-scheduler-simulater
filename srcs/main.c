@@ -41,4 +41,5 @@ int main(int argc, char **argv)
 		printf("time_quantum\t%lld  ", data.time_quantum);
 		printf("\n");
 	}
+	exit(0);
 }

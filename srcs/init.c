@@ -37,7 +37,8 @@ void	parse_options(int argc, char **argv, t_data *data)
 	option_count(argc, argv, data);
 	option_algo_check(data);
 	while (++i < data->option_count)
-		option_put(argv, &data->option_info[i], data);
+		option_put(argv, data->option_info[i], data);
+	option_random(data);
 }
 
 void	init(int argc, char **argv, t_data *data)
