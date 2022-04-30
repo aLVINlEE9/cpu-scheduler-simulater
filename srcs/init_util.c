@@ -76,16 +76,16 @@ void	option_each_sub(char **argv, int argc, int idx, int type, uint64_t *option,
 	i = -1;
 	tmp_idx = idx;
 	if (option_check_algo(type, data))
-		error_print("bad arguments[option](incorrect option, not match with algo)");
+		error_print("bad arguments[option](incorrect option)");
 	while (idx < tmp_idx + data->process_cores && idx < argc)
 	{
 		if (!is_num(argv[idx]))
-			error_print("bad arguments[option](incorrect option, not a number)");
+			error_print("bad arguments[option](incorrect option)");
 		option[++i] = milli_to_micro(atoi(argv[idx]));
 		idx++;
 	}
 	if (idx != tmp_idx + data->process_cores)
-		error_print("bad arguments[option](incorrect option, amount)");
+		error_print("bad arguments[option](incorrect option)");
 	else
 		data->option_tf[type - 10] = TRUE;
 }
@@ -101,7 +101,7 @@ void	option_each(char **argv, int argc, int idx, t_data *data)
 	else if (strcmp(argv[idx], "-t") == 0)
 		option_each_sub(argv, argc, idx + 1, TIME_QUANTUM, data->time_quantum, data);
 	else
-		error_print("bad arguments[option](incorrect option, not allowed option)");
+		error_print("bad arguments[option](incorrect options)");
 }
 
 void	option_malloc(t_data *data)

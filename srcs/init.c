@@ -59,7 +59,7 @@ void	parse_each_options(int argc, char **argv, t_data *data)
 		option_each(argv, argc, i + next_option, data);
 		next_option += (data->process_cores + 1);
 		if (i + next_option > argc)
-			error_print("bad arguments[option](incorrect option, amount)");
+			error_print("bad arguments[option](incorrect option)");
 		if (i + next_option == argc)
 			break ;
 	}
