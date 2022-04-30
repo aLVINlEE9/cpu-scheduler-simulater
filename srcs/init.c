@@ -22,23 +22,53 @@ void	parse_algorithm(char *argv, t_data *data)
 
 void	parse_process_cores(char *argv, t_data *data)
 {
-	if (!is_not_num(argv))
+	if (!is_num(argv))
 		error_print("bad arguments[process_cores](incorrect process_cores)");
 	data->process_cores = atoi(argv);
 	if (data->process_cores < 1)
 		error_print("bad arguments[process_cores](not enough process)");
 }
 
-void	parse_options(int argc, char **argv, t_data *data)
+void	put_random_option(t_data *data)
 {
 	int	i;
 
 	i = -1;
-	option_count(argc, argv, data);
-	option_algo_check(data);
-	while (++i < data->option_count)
-		option_put(argv, data->option_info[i], data);
-	option_random(data);
+	while (++i < 4)
+	{
+		if (data->option_tf[i] == FALSE)
+		{
+			if (option_check_algo(i + 10, data))
+				continue ;
+			else
+				option_each_random(i + 10, data);
+		}
+	}
+}
+
+void	parse_each_options(int argc, char **argv, t_data *data)
+{
+	int	i;
+	int	next_option;
+
+	i = 3;
+	next_option = 0;
+	option_malloc(data);
+	while (i + next_option < argc)
+	{
+		option_each(argv, argc, i + next_option, data);
+		next_option += (data->process_cores + 1);
+		if (i + next_option > argc)
+			error_print("bad arguments[option](incorrect option, amount)");
+		if (i + next_option == argc)
+			break ;
+	}
+}
+
+void	parse_options(int argc, char **argv, t_data *data)
+{
+	parse_each_options(argc, argv, data);
+	put_random_option(data);
 }
 
 void	init(int argc, char **argv, t_data *data)

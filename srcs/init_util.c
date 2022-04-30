@@ -1,12 +1,44 @@
 #include "../includes/cpu_scheduler.h"
 
-void	random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j)
+int	option_check_algo(int type, t_data *data)
+{
+	if (data->scheduling_algo == FCFS || data->scheduling_algo == HRN || \
+		data->scheduling_algo == MFQ || data->scheduling_algo == SJF || \
+		data->scheduling_algo == SRTF)
+	{
+		if (type == PRIORITY)
+			return (1);
+		if (type == TIME_QUANTUM)
+			return (1);
+	}
+	else if (data->scheduling_algo == PS)
+	{
+		if (type == TIME_QUANTUM)
+			return (1);
+	}
+	else if (data->scheduling_algo == RR)
+	{
+		if (type == PRIORITY)
+			return (1);
+	}
+	return (0);
+}
+
+void	option_each_random_sub(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j)
 {
 	uint64_t	k;
 	uint64_t	m;
+	uint64_t	tmp;
 
 	k = 0;
 
+	if (i == 2)
+	{
+		tmp = milli_to_micro(rand() % j + 1);
+		while (k < loop)
+			arr[k++] = tmp;
+		return ;
+	}
 	while (k < loop)
 	{
 		if (i == 0)
@@ -24,234 +56,84 @@ void	random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j)
 	}
 }
 
-void	not_use_options(int type, t_data *data)
-{
-	if (type == PRIORITY)
-		data->priority = NULL;
-	else if (type == TIME_QUANTUM)
-		data->time_quantum = 0;
-}
-
-void	option_random_sub(int type, t_data *data)
+void	option_each_random(int type, t_data *data)
 {
 	if (type == BURST_TIME)
-	{
-		data->burst_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->burst_time == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		random_gen(data->burst_time, data->process_cores, 0, 30);
-	}
-	else if (type == ARRIVING_TIME)
-	{
-		data->arriving_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->arriving_time == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		random_gen(data->arriving_time, data->process_cores, 0, 15);
-	}
-	else if (type == PRIORITY)
-	{
-		data->priority = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->priority == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		random_gen(data->priority, data->process_cores, 1, 5);
-	}
-	else if (type == TIME_QUANTUM)
-		data->time_quantum = milli_to_micro(rand() % 10 + 1);
+		option_each_random_sub(data->burst_time ,data->process_cores, 0, 30);
+	if (type == ARRIVING_TIME)
+		option_each_random_sub(data->arriving_time, data->process_cores, 0, 15);
+	if (type == PRIORITY)
+		option_each_random_sub(data->priority, data->process_cores, 1, 5);
+	if (type == TIME_QUANTUM)
+		option_each_random_sub(data->time_quantum, data->process_cores, 2, 10);
 }
 
-void	option_random(t_data *data)
-{
-	if (data->scheduling_algo == FCFS || data->scheduling_algo == HRN || \
-		data->scheduling_algo == MFQ || data->scheduling_algo == SJF || \
-		data->scheduling_algo == SRTF)
-	{
-		if (data->option_v[BURST_TIME - 10] == FALSE)
-			option_random_sub(BURST_TIME, data);
-		if (data->option_v[ARRIVING_TIME - 10] == FALSE)
-			option_random_sub(ARRIVING_TIME, data);
-		not_use_options(PRIORITY, data);
-		not_use_options(TIME_QUANTUM, data);
-	}
-	else if (data->scheduling_algo == PS)
-	{
-		if (data->option_v[BURST_TIME - 10] == FALSE)
-			option_random_sub(BURST_TIME, data);
-		if (data->option_v[ARRIVING_TIME - 10] == FALSE)
-			option_random_sub(ARRIVING_TIME, data);
-		if (data->option_v[PRIORITY - 10] == FALSE)
-			option_random_sub(PRIORITY, data);
-		not_use_options(TIME_QUANTUM, data);
-	}
-	else if (data->scheduling_algo == RR)
-	{
-		if (data->option_v[BURST_TIME - 10] == FALSE)
-			option_random_sub(BURST_TIME, data);
-		if (data->option_v[ARRIVING_TIME - 10] == FALSE)
-			option_random_sub(ARRIVING_TIME, data);
-		if (data->option_v[TIME_QUANTUM - 10] == FALSE)
-			option_random_sub(TIME_QUANTUM, data);
-		not_use_options(PRIORITY, data);
-	}
-}
-
-void	option_put(char **argv, int *options, t_data *data)
+void	option_each_sub(char **argv, int argc, int idx, int type, uint64_t *option, t_data *data)
 {
 	int	i;
+	int	tmp_idx;
 
 	i = -1;
-	if (options[1] == BURST_TIME)
+	tmp_idx = idx;
+	if (option_check_algo(type, data))
+		error_print("bad arguments[option](incorrect option, not match with algo)");
+	while (idx < tmp_idx + data->process_cores && idx < argc)
 	{
-		data->burst_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->burst_time == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		while (++i < data->process_cores)
-			data->burst_time[i] = milli_to_micro(atoi(argv[options[0] + i]));
+		if (!is_num(argv[idx]))
+			error_print("bad arguments[option](incorrect option, not a number)");
+		option[++i] = milli_to_micro(atoi(argv[idx]));
+		idx++;
 	}
-	else if (options[1] == ARRIVING_TIME)
-	{
-		data->arriving_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->arriving_time == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		while (++i < data->process_cores)
-			data->arriving_time[i] = milli_to_micro(atoi(argv[options[0] + i]));
-	}
-	else if (options[1] == PRIORITY)
-	{
-		data->priority = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
-		if (data->priority == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
-		while (++i < data->process_cores)
-			data->priority[i] = atoi(argv[options[0] + i]);
-	}
-	else if (options[1] == TIME_QUANTUM)
-	{
-		data->time_quantum = milli_to_micro(atoi(argv[options[0]]));
-	}
-}
-
-void	option_ex(t_data *data)
-{
-	data->option_v = (int *)malloc(sizeof(int) * 4);
-	if (data->option_v == NULL)
-		error_print("memory error[parse_options](failed to malloc memory)");
-	data->option_v[0] = FALSE;
-	data->option_v[1] = FALSE;
-	data->option_v[2] = FALSE;
-	data->option_v[3] = FALSE;
-}
-
-void	option_algo_check(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	option_ex(data);
-	if (data->scheduling_algo == FCFS || data->scheduling_algo == HRN || \
-		data->scheduling_algo == MFQ || data->scheduling_algo == SJF || \
-		data->scheduling_algo == SRTF)
-	{
-		while (++i < data->option_count)
-		{
-			if (data->option_info[i][1] == PRIORITY || \
-				data->option_info[i][1] == TIME_QUANTUM)
-				error_print("bad arguments[parse_options](incorrect option with algo)");
-			data->option_v[data->option_info[i][1] - 10] = TRUE;
-		}
-	}
-	else if (data->scheduling_algo == PS)
-	{
-		while (++i < data->option_count)
-		{
-			if (data->option_info[i][1] == TIME_QUANTUM)
-				error_print("bad arguments[parse_options](incorrect option with algo)");
-			data->option_v[data->option_info[i][1] - 10] = TRUE;
-		}
-	}
-	else if (data->scheduling_algo == RR)
-	{
-		while (++i < data->option_count)
-		{
-			if (data->option_info[i][1] == PRIORITY)
-				error_print("bad arguments[parse_options](incorrect option with algo)");
-			data->option_v[data->option_info[i][1] - 10] = TRUE;
-		}
-	}
-}
-
-int	choose_option(char *argv)
-{
-	if (strcmp(argv, "b") == 0)
-		return (BURST_TIME);
-	else if (strcmp(argv, "a") == 0)
-		return (ARRIVING_TIME);
-	else if (strcmp(argv, "pr") == 0)
-		return (PRIORITY);
-	else if (strcmp(argv, "t") == 0)
-		return (TIME_QUANTUM);
+	if (idx != tmp_idx + data->process_cores)
+		error_print("bad arguments[option](incorrect option, amount)");
 	else
-		error_print("bad arguments[parse_options](incorrect option)");
-	return (0);
+		data->option_tf[type - 10] = TRUE;
 }
 
-void	option_count_sub(int argc, char **argv, t_data *data)
+void	option_each(char **argv, int argc, int idx, t_data *data)
 {
-	int	i;
-	int	j;
-
-	i = 2;
-	j = 0;
-	while (++i < argc)
-	{
-		if (argv[i][0] == '-')
-		{
-			data->option_info[j][0] = i + 1;
-			data->option_info[j][1] = choose_option(&argv[i][1]);
-			if (j != 0)
-			{
-				if (data->option_info[j][1] != TIME_QUANTUM)
-				{
-					if (data->option_info[j][0] - data->option_info[j - 1][0] \
-						!= data->process_cores + 1)
-						error_print("bad arguments[parse_options](incorrect option amount)");
-				}
-				else
-				{
-					if (data->option_info[j][0] - data->option_info[j - 1][0] \
-						!= 2)
-						error_print("bad arguments[parse_options](incorrect option amount)");
-				}
-			}
-			j++;
-		}
-	}
+	if (strcmp(argv[idx], "-b") == 0)
+		option_each_sub(argv, argc, idx + 1, BURST_TIME, data->burst_time, data);
+	else if (strcmp(argv[idx], "-a") == 0)
+		option_each_sub(argv, argc, idx + 1, ARRIVING_TIME, data->arriving_time, data);
+	else if (strcmp(argv[idx], "-pr") == 0)
+		option_each_sub(argv, argc, idx + 1, PRIORITY, data->priority, data);
+	else if (strcmp(argv[idx], "-t") == 0)
+		option_each_sub(argv, argc, idx + 1, TIME_QUANTUM, data->time_quantum, data);
+	else
+		error_print("bad arguments[option](incorrect option, not allowed option)");
 }
 
-void	option_count(int argc, char **argv, t_data *data)
+void	option_malloc(t_data *data)
 {
 	int	i;
-	int	cnt;
 
-	i = 2;
-	cnt = 0;
-	while (++i < argc)
-	{
-		if (argv[i][0] == '-')
-			cnt++;
-	}
-	data->option_count = cnt;
-	if (cnt == 0)
-		return ;
-	data->option_info = (int **)malloc(sizeof(int *) * cnt);
-	if (data->option_info == NULL)
-		error_print("memory error[parse_options](failed to malloc memory)");
 	i = -1;
-	while (++i < data->option_count)
+	data->burst_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
+	if (data->burst_time == NULL)
+		error_print("memory error[option](failed to malloc memory)");
+	data->arriving_time = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
+	if (data->arriving_time == NULL)
+		error_print("memory error[option](failed to malloc memory)");
+	data->priority = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
+	if (data->priority == NULL)
+		error_print("memory error[option](failed to malloc memory)");
+	data->time_quantum = (uint64_t *)malloc(sizeof(uint64_t) * data->process_cores);
+	if (data->time_quantum == NULL)
+		error_print("memory error[option](failed to malloc memory)");
+	while (++i < data->process_cores)
 	{
-		data->option_info[i] = (int *)malloc(sizeof(int) * 2);
-		if (data->option_info[i] == NULL)
-			error_print("memory error[parse_options](failed to malloc memory)");
+		data->burst_time[i] = 0;
+		data->arriving_time[i] = 0;
+		data->priority[i] = 0;
+		data->time_quantum[i] = 0;
 	}
-	option_count_sub(argc, argv, data);
+	data->option_tf = (int *)malloc(sizeof(int) * 4);
+	if (data->option_tf == NULL)
+		error_print("memory error[option](failed to malloc memory)");
+	i = -1;
+	while (++i < 4)
+		data->option_tf[i] = FALSE;
 }
 
 uint64_t	milli_to_micro(uint64_t milli)
@@ -259,7 +141,7 @@ uint64_t	milli_to_micro(uint64_t milli)
 	return (milli * 1000);
 }
 
-int	is_not_num(char *argv)
+int	is_num(char *argv)
 {
 	int	i;
 

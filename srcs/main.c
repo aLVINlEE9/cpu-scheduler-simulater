@@ -37,7 +37,7 @@ void	print_scheduling_info(t_data *data)
 			printf("no priority\t");
 		else
 			printf("priority\t%lld  ", data->priority[i]);
-		printf("time_quantum\t%lld  ", data->time_quantum);
+		printf("time_quantum\t%lld  ", data->time_quantum[i]);
 		printf("\n");
 	}
 	printf("\n");

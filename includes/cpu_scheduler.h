@@ -73,13 +73,11 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
-	int				option_count;
-	int				**option_info; // [[indexs, type], ..]
-	int				*option_v;
+	int				*option_tf;
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
 	uint64_t		*priority;
-	uint64_t		time_quantum;
+	uint64_t		*time_quantum;
 }	t_data;
 
 int			FCFS(t_data *data);
@@ -93,12 +91,13 @@ int			SRTF(t_data *data);
 void		error_print(char *err_msg);
 
 void		random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j);
-void		option_random(t_data *data);
-void		option_put(char **argv, int *options, t_data *data);
-void		option_algo_check(t_data *data);
-void		option_count(int argc, char **argv, t_data *data);
+void		option_each_random(int type, t_data *data);
+int			option_check_algo(int type, t_data *data);
+void		option_each_sub(char **argv, int argc, int idx, int type, uint64_t *option, t_data *data);
+void		option_each(char **argv, int argc, int idx, t_data *data);
+void		option_malloc(t_data *data);
 uint64_t	milli_to_micro(uint64_t milli);
-int			is_not_num(char *argv);
+int			is_num(char *argv);
 
 void		init(int argc, char **argv, t_data *data);
 
