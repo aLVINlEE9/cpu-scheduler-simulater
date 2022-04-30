@@ -90,15 +90,22 @@ int			SRTF(t_data *data);
 
 void		error_print(char *err_msg);
 
-void		random_gen(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j);
-void		option_each_random(int type, t_data *data);
 int			option_check_algo(int type, t_data *data);
+void		option_each_random_sub(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j);
+void		option_each_random(int type, t_data *data);
 void		option_each_sub(char **argv, int argc, int idx, int type, uint64_t *option, t_data *data);
 void		option_each(char **argv, int argc, int idx, t_data *data);
 void		option_malloc(t_data *data);
 uint64_t	milli_to_micro(uint64_t milli);
 int			is_num(char *argv);
 
+void		parse_algorithm(char *argv, t_data *data);
+void		parse_process_cores(char *argv, t_data *data);
+void		put_random_option(t_data *data);
+void		parse_each_options(int argc, char **argv, t_data *data);
+void		parse_options(int argc, char **argv, t_data *data);
 void		init(int argc, char **argv, t_data *data);
+
+void		print_scheduling_info(t_data *data);
 
 #endif
