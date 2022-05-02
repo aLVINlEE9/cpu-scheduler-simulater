@@ -78,6 +78,7 @@ void	init(int argc, char **argv, t_data *data)
 		parse_algorithm(argv[1], data);
 		parse_process_cores(argv[2], data);
 		parse_options(argc, argv, data);
+		init_process_table(data);
 	}
 	else
 		error_print("bad arguments[input](non input)");

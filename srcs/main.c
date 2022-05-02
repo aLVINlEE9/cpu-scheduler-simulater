@@ -50,5 +50,7 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 	init(argc, argv, &data);
 	print_scheduling_info(&data);
+	start_process(&data);
+	data.scheduling_algo(&data);
 	exit(0);
 }

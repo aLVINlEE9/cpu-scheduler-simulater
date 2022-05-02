@@ -108,4 +108,6 @@ void		init(int argc, char **argv, t_data *data);
 
 void		print_scheduling_info(t_data *data);
 
+void		start_process(t_data *data);
+
 #endif
