@@ -24,8 +24,14 @@ int	FCFS_start(t_data *data, t_process_table_node *process_table_node)
 	FCFS_running(pcb);
 }
 
+void	FCFS(t_data *data)
+{
+	
+}
+
 int	FCFS(t_data *data)
 {
+	FCFS_scheduling(data);
 	start_process(data);
 	return (0);
 }
