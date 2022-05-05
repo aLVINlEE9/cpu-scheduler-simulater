@@ -41,9 +41,11 @@ typedef struct s_PCB
 	pid_t			pid;
 	int				user_id;
 	process_state	state;
-	// register 		i;
+	uint64_t		resister;
 	struct s_data	*data;
-	uint64_t		start;
+	uint64_t		process_start;
+	uint64_t		running_start;
+	uint64_t		remaining_time;
 }	t_PCB;
 
 /*
@@ -100,6 +102,8 @@ int			SJF_start(t_data *data, t_process_table_node *process_table_node);
 int			SRTF(t_data *data);
 int			SRTF_start(t_data *data, t_process_table_node *process_table_node);
 
+void		dispatcher(t_PCB *pcb);
+
 void		error_print(char *err_msg);
 
 int			option_check_algo(int type, t_data *data);
@@ -122,6 +126,10 @@ void		print_scheduling_info(t_data *data);
 
 void		start_process(t_data *data);
 
+void		running(t_PCB *pcb);
+
 uint64_t	get_time(void);
+
+void		arriving_wait(t_data *data, uint64_t start, int id);
 
 #endif

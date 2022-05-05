@@ -5,8 +5,11 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 	pcb->pid = 0;
 	pcb->user_id = id;
 	pcb->state = NEW;
+	pcb->resister = 0;
 	pcb->data = data;
-	pcb->start = 0;
+	pcb->process_start = 0;
+	pcb->running_start = 0;
+	pcb->remaining_time = 0;
 }
 
 void	append_process_table_node(t_data *data, t_process_table *process_table, \
