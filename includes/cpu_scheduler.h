@@ -45,7 +45,7 @@ typedef struct s_PCB
 	struct s_data	*data;
 	uint64_t		process_start;
 	uint64_t		running_start;
-	uint64_t		remaining_time;
+	uint64_t		cost_time;
 }	t_PCB;
 
 /*
