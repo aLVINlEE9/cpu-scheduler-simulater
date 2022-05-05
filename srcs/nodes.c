@@ -1,14 +1,15 @@
 #include "../includes/cpu_scheduler.h"
 
-void	create_pcb(t_PCB *pcb, int id)
+void	create_pcb(t_data *data, t_PCB *pcb, int id)
 {
 	pcb->pid = 0;
 	pcb->user_id = id;
 	pcb->state = NEW;
+	pcb->data = data;
 	pcb->start = 0;
 }
 
-void	append_process_table_node(t_process_table *process_table, \
+void	append_process_table_node(t_data *data, t_process_table *process_table, \
 									t_process_table_node *new_node, int id)
 {
 	process_table->tail->prev->next = new_node;
@@ -20,7 +21,7 @@ void	append_process_table_node(t_process_table *process_table, \
 	new_node->pcb = (t_process_table_node *)malloc(sizeof(t_process_table_node));
 	if (new_node->pcb == NULL)
 		error_print("memory error[node](failed to malloc memory)");
-	create_pcb(new_node->pcb, id);
+	create_pcb(data, new_node->pcb, id);
 }
 
 t_process_table_node	*create_process_table_node(void)
@@ -57,6 +58,6 @@ void	init_process_table(t_data *data)
 	while (++i < data->process_cores)
 	{
 		new_node = create_process_table_node();
-		append_process_table_node(data->process_table, new_node, i);
+		append_process_table_node(data, data->process_table, new_node, i);
 	}
 }

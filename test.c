@@ -49,6 +49,7 @@ int main(int argc, char **envp)
 		pid = fork();
 		if (pid == 0)
 		{
+			printf("%d\n", getppid());
 			child_process(envp, &info);
 		}
 	}

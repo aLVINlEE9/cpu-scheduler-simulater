@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/types.h>
+#include <semaphore.h>
 
 #define FALSE			0
 #define TRUE			1
@@ -41,6 +42,7 @@ typedef struct s_PCB
 	int				user_id;
 	process_state	state;
 	// register 		i;
+	struct s_data	*data;
 	uint64_t		start;
 }	t_PCB;
 
@@ -73,20 +75,30 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
+	int				(* algo_start)(struct s_data *, t_process_table_node *);
 	int				*option_tf;
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
 	uint64_t		*priority;
 	uint64_t		*time_quantum;
+	sem_t			*dispatcher;
+	sem_t			*stop;
 }	t_data;
 
 int			FCFS(t_data *data);
+int			FCFS_start(t_data *data, t_process_table_node *process_table_node);
 int			HRN(t_data *data);
+int			HRN_start(t_data *data, t_process_table_node *process_table_node);
 int			MFQ(t_data *data);
+int			MFQ_start(t_data *data, t_process_table_node *process_table_node);
 int			PS(t_data *data);
+int			PS_start(t_data *data, t_process_table_node *process_table_node);
 int			RR(t_data *data);
+int			RR_start(t_data *data, t_process_table_node *process_table_node);
 int			SJF(t_data *data);
+int			SJF_start(t_data *data, t_process_table_node *process_table_node);
 int			SRTF(t_data *data);
+int			SRTF_start(t_data *data, t_process_table_node *process_table_node);
 
 void		error_print(char *err_msg);
 
@@ -109,5 +121,7 @@ void		init(int argc, char **argv, t_data *data);
 void		print_scheduling_info(t_data *data);
 
 void		start_process(t_data *data);
+
+uint64_t	get_time(void);
 
 #endif

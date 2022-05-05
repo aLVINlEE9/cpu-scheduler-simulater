@@ -3,19 +3,40 @@
 void	parse_algorithm(char *argv, t_data *data)
 {
 	if (strcmp(argv, "FCFS") == 0)
+	{
 		data->scheduling_algo = FCFS;
+		data->algo_start = FCFS_start;
+	}
 	else if (strcmp(argv, "HRN") == 0)
+	{
 		data->scheduling_algo = HRN;
+		data->algo_start = HRN_start;
+	}
 	else if (strcmp(argv, "MFQ") == 0)
+	{
 		data->scheduling_algo = MFQ;
+		data->algo_start = MFQ_start;
+	}
 	else if (strcmp(argv, "PS") == 0)
+	{
 		data->scheduling_algo = PS;
+		data->algo_start = PS_start;
+	}
 	else if (strcmp(argv, "RR") == 0)
+	{
 		data->scheduling_algo = RR;
+		data->algo_start = RR_start;
+	}
 	else if (strcmp(argv, "SJF") == 0)
+	{
 		data->scheduling_algo = SJF;
+		data->algo_start = SJF_start;
+	}
 	else if (strcmp(argv, "SRTF") == 0)
+	{
 		data->scheduling_algo = SRTF;
+		data->algo_start = SRTF_start;
+	}
 	else
 		error_print("bad arguments[algorithm](incorrect algorithm)");
 }
@@ -71,6 +92,14 @@ void	parse_options(int argc, char **argv, t_data *data)
 	put_random_option(data);
 }
 
+void	init_semaphores(t_data *data)
+{
+	unlink("dispatcher");
+	unlink("stop");
+	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, data->process_cores);
+	data->stop = sem_open("stop", O_CREAT, 0600, 1);
+}
+
 void	init(int argc, char **argv, t_data *data)
 {
 	if (argc > 2)
@@ -78,6 +107,7 @@ void	init(int argc, char **argv, t_data *data)
 		parse_algorithm(argv[1], data);
 		parse_process_cores(argv[2], data);
 		parse_options(argc, argv, data);
+		init_semaphores(data);
 		init_process_table(data);
 	}
 	else
