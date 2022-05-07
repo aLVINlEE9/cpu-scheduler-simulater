@@ -6,5 +6,3 @@ void	dispatcher(t_PCB *pcb)
 	pcb->state = RUNNING;
 	pcb->running_start = get_time();
 }
-
-void	wait()

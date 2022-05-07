@@ -5,6 +5,11 @@ SRCS 	=	srcs/main.c				\
 			srcs/error.c			\
 			srcs/init_util.c		\
 			srcs/init.c				\
+			srcs/dispatcher.c		\
+			srcs/process.c			\
+			srcs/wait.c				\
+			srcs/nodes.c			\
+			srcs/util.c				\
 			srcs/algorithm/FCFS.c	\
 			srcs/algorithm/HRN.c	\
 			srcs/algorithm/MFQ.c	\

@@ -23,7 +23,7 @@ void	start_process(t_data *data)
 		if (pid == 0)
 		{
 			init_process(process_table_node, i);
-			data->algo_start(data, process_table_node);
+			data->algo_start(process_table_node);
 			exit(0);
 		}
 		process_table_node = process_table_node->next;

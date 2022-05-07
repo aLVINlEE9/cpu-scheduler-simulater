@@ -1,8 +1,9 @@
 #include "../../includes/cpu_scheduler.h"
 
-int	SJF_start(t_data *data, t_process_table_node *process_table_node)
+int	SJF_start(t_process_table_node *process_table_node)
 {
-
+	(void)process_table_node;
+	return (0);
 }
 
 int	SJF(t_data *data)

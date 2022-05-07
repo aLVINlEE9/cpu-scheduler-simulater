@@ -23,7 +23,7 @@ void	append_process_table_node(t_data *data, t_process_table *process_table, \
 	process_table->tail->prev = new_node;
 	process_table->count++;
 	new_node->pid = 0;
-	new_node->pcb = (t_process_table_node *)malloc(sizeof(t_process_table_node));
+	new_node->pcb = (t_PCB *)malloc(sizeof(t_PCB));
 	if (new_node->pcb == NULL)
 		error_print("memory error[node](failed to malloc memory)");
 	create_pcb(data, new_node->pcb, id);
@@ -47,6 +47,10 @@ void	create_process_table(t_data *data)
 {
 	data->process_table->head = create_process_table_node();
 	data->process_table->tail = create_process_table_node();
+	data->process_table->head->next = data->process_table->tail;
+	data->process_table->head->prev = NULL;
+	data->process_table->tail->prev = data->process_table->head;
+	data->process_table->tail->next = NULL;
 	data->process_table->average_waiting_time = 0;
 	data->process_table->count = 0;
 }

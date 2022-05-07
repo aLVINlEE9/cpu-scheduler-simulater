@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <semaphore.h>
 
 #define FALSE			0
@@ -80,7 +81,7 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
-	int				(* algo_start)(struct s_data *, t_process_table_node *);
+	int				(* algo_start)(t_process_table_node *);
 	int				*option_tf;
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
@@ -90,23 +91,32 @@ typedef struct s_data
 	sem_t			*stop;
 }	t_data;
 
+void		update_cost_time(t_PCB *pcb);
+void		FCFS_running(t_PCB *pcb);
+void		termination(t_PCB *pcb);
+int			FCFS_start(t_process_table_node *process_table_node);
+void		print_result(t_data *data);
 int			FCFS(t_data *data);
-int			FCFS_start(t_data *data, t_process_table_node *process_table_node);
-int			HRN(t_data *data);
-int			HRN_start(t_data *data, t_process_table_node *process_table_node);
+
+int			HRN_start(t_process_table_node *process_table_node);
+int 		HRN(t_data *data);
+
+int			MFQ_start(t_process_table_node *process_table_node);
 int			MFQ(t_data *data);
-int			MFQ_start(t_data *data, t_process_table_node *process_table_node);
+
+int			PS_start(t_process_table_node *process_table_node);
 int			PS(t_data *data);
-int			PS_start(t_data *data, t_process_table_node *process_table_node);
+
+int			RR_start(t_process_table_node *process_table_node);
 int			RR(t_data *data);
-int			RR_start(t_data *data, t_process_table_node *process_table_node);
+
+int			SJF_start(t_process_table_node *process_table_node);
 int			SJF(t_data *data);
-int			SJF_start(t_data *data, t_process_table_node *process_table_node);
+
+int			SRTF_start(t_process_table_node *process_table_node);
 int			SRTF(t_data *data);
-int			SRTF_start(t_data *data, t_process_table_node *process_table_node);
 
 void		dispatcher(t_PCB *pcb);
-
 void		error_print(char *err_msg);
 
 int			option_check_algo(int type, t_data *data);
@@ -123,16 +133,22 @@ void		parse_process_cores(char *argv, t_data *data);
 void		put_random_option(t_data *data);
 void		parse_each_options(int argc, char **argv, t_data *data);
 void		parse_options(int argc, char **argv, t_data *data);
+void		init_semaphores(t_data *data);
 void		init(int argc, char **argv, t_data *data);
 
 void		print_scheduling_info(t_data *data);
 
+void		create_pcb(t_data *data, t_PCB *pcb, int id);
+void		append_process_table_node(t_data *data, t_process_table *process_table, \
+									t_process_table_node *new_node, int id);
+t_process_table_node	*create_process_table_node(void);
+void		create_process_table(t_data *data);
+void		init_process_table(t_data *data);
+
+void		init_process(t_process_table_node *process_table_node, int i);
 void		start_process(t_data *data);
 
-void		running(t_PCB *pcb);
-
 uint64_t	get_time(void);
-
 void		arriving_wait(t_data *data, uint64_t start, int id);
 
 #endif

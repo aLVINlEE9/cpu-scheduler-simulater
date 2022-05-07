@@ -22,7 +22,7 @@ void	termination(t_PCB *pcb)
 	sem_post(pcb->data->dispatcher);
 }
 
-int	FCFS_start(t_data *data, t_process_table_node *process_table_node)
+int	FCFS_start(t_process_table_node *process_table_node)
 {
 	t_PCB *pcb;
 
@@ -31,6 +31,7 @@ int	FCFS_start(t_data *data, t_process_table_node *process_table_node)
 	dispatcher(pcb);
 	FCFS_running(pcb);
 	termination(pcb);
+	return (0);
 }
 
 void	print_result(t_data *data)
@@ -45,15 +46,15 @@ void	print_result(t_data *data)
 	{
 		printf("PROCESS %d : \t", i + 1);
 		printf("PID\t%d  ", process_table_node->pid);
-		printf("Turnaround time", process_table_node->pcb->turnaround_time);
+		printf("Turnaround time\t %lld  ", process_table_node->pcb->turnaround_time);
 		printf("Waiting time\t %lld  ", process_table_node->pcb->waiting_time);
 		process_table_node = process_table_node->next;
+		printf("\n");
 	}
 }
 
 int	FCFS(t_data *data)
 {
-	FCFS_scheduling(data);
 	start_process(data);
 	print_result(data);
 	return (0);
