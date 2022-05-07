@@ -9,6 +9,8 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 	pcb->data = data;
 	pcb->process_start = 0;
 	pcb->running_start = 0;
+	pcb->waiting_time = 0;
+	pcb->turnaround_time = 0;
 	pcb->cost_time = 0;
 }
 
@@ -45,6 +47,7 @@ void	create_process_table(t_data *data)
 {
 	data->process_table->head = create_process_table_node();
 	data->process_table->tail = create_process_table_node();
+	data->process_table->average_waiting_time = 0;
 	data->process_table->count = 0;
 }
 

@@ -45,6 +45,8 @@ typedef struct s_PCB
 	struct s_data	*data;
 	uint64_t		process_start;
 	uint64_t		running_start;
+	uint64_t		waiting_time;
+	uint64_t		turnaround_time;
 	uint64_t		cost_time;
 }	t_PCB;
 
@@ -66,6 +68,7 @@ typedef struct s_process_table
 {
 	t_process_table_node	*head;
 	t_process_table_node	*tail;
+	uint64_t				average_waiting_time;
 	int						count;
 }	t_process_table;
 
