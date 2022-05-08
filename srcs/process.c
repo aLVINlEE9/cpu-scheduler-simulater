@@ -48,5 +48,4 @@ void	start_process(t_data *data)
 		process_table_node = process_table_node->next;
 	}
 	sem_wait(data->stop);
-	release_resources(data);
 }

@@ -6,5 +6,5 @@ void	arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id)
 		usleep(10);
 	pcb->state = READY;
 	pcb->readyque_arrived_time = get_time();
-	printf("wait%d %lld\n", id, pcb->readyque_arrived_time - pcb->process_start);
+	// printf("wait%d %lld\n", id, pcb->readyque_arrived_time - pcb->process_start);
 }

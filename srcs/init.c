@@ -111,6 +111,7 @@ void	init(int argc, char **argv, t_data *data)
 		parse_options(argc, argv, data);
 		init_semaphores(data);
 		init_process_table(data);
+		data->done_count = 0;
 	}
 	else
 		error_print("bad arguments[input](non input)");

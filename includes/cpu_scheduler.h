@@ -52,7 +52,6 @@ typedef struct s_PCB
 	uint64_t		waiting_time;
 	uint64_t		turnaround_time;
 	uint64_t		cost_time;
-	int				done_count;
 }	t_PCB;
 
 /*
@@ -96,6 +95,7 @@ typedef struct s_data
 	sem_t			*stop;
 	sem_t			*moniter_sem;
 	pthread_t		moniter;
+	int				done_count;
 }	t_data;
 
 void		update_cost_time(t_PCB *pcb);
