@@ -5,22 +5,41 @@ void	init_process(t_process_table_node *process_table_node, int i)
 	process_table_node->pid = getpid();
 	process_table_node->pcb->pid = process_table_node->pid;
 	process_table_node->pcb->user_id = i + 1;
-	process_table_node->pcb->state = READY;
 	process_table_node->pcb->process_start = get_time();
+}
+
+void	release_resources(t_data *data)
+{
+	int	i;
+	t_process_table_node	*process_table_node;
+
+	i = -1;
+	process_table_node = data->process_table->head->next;
+	while (++i < data->process_cores)
+	{
+		kill(process_table_node->pid_k, SIGKILL);
+		process_table_node = process_table_node->next;
+	}
+	sem_close(data->stop);
+	sem_close(data->moniter_sem);
+	sem_close(data->dispatcher);
+	free(data->arriving_time);
+	free(data->burst_time);
 }
 
 void	start_process(t_data *data)
 {
 	int	i;
-	pid_t	pid;
 	t_process_table_node	*process_table_node;
 
 	i = -1;
 	process_table_node = data->process_table->head->next;
+	sem_wait(data->stop);
 	while (++i < data->process_table->count)
 	{
-		pid = fork();
-		if (pid == 0)
+		printf("%d\n", i);
+		process_table_node->pid_k = fork();
+		if (process_table_node->pid_k == 0)
 		{
 			init_process(process_table_node, i);
 			data->algo_start(process_table_node);
@@ -28,4 +47,6 @@ void	start_process(t_data *data)
 		}
 		process_table_node = process_table_node->next;
 	}
+	sem_wait(data->stop);
+	release_resources(data);
 }

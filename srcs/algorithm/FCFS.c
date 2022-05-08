@@ -3,23 +3,49 @@
 void	update_cost_time(t_PCB *pcb)
 {
 	pcb->cost_time = get_time() - pcb->running_start;
+	usleep(50);
 }
 
 void	FCFS_running(t_PCB *pcb)
 {
-	while (pcb->data->burst_time[pcb->user_id - 1] >= pcb->cost_time)
+	printf("%lld\n", pcb->data->burst_time[pcb->user_id - 1]);
+	while (1)
 	{
 		update_cost_time(pcb);
+		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id - 1])
+			break ;
+		// printf("%lld : %lld\n", pcb->cost_time, pcb->data->burst_time[pcb->user_id - 1]);
 		pcb->resister += pcb->cost_time;
 	}
+	printf("done!\n");
 }
 
 void	termination(t_PCB *pcb)
 {
 	pcb->state = TERMINATED;
-	pcb->waiting_time = pcb->running_start - pcb->process_start;
+	pcb->waiting_time = pcb->running_start - pcb->readyque_arrived_time;
 	pcb->turnaround_time = pcb->waiting_time + pcb->cost_time;
+	pcb->done_count++;
+	printf("%d %lld %lld\n", pcb->pid, pcb->turnaround_time, pcb->waiting_time);
 	sem_post(pcb->data->dispatcher);
+}
+
+void	*moniter(void *data)
+{
+	t_PCB	*pcb;
+
+	pcb = (t_PCB *)data;
+	while (1)
+	{
+		sem_wait(pcb->data->moniter_sem);
+		if (pcb->done_count == pcb->data->process_cores - 1)
+		{
+			sem_post(pcb->data->stop);
+			break;
+		}
+		sem_post(pcb->data->moniter_sem);
+	}
+	return ((void *)0);
 }
 
 int	FCFS_start(t_process_table_node *process_table_node)
@@ -27,7 +53,9 @@ int	FCFS_start(t_process_table_node *process_table_node)
 	t_PCB *pcb;
 
 	pcb = process_table_node->pcb;
-	arriving_wait(pcb->data, pcb->process_start, pcb->user_id);
+	pthread_create(&pcb->data->moniter, NULL, moniter, (void *)pcb);
+	pthread_detach(pcb->data->moniter);
+	arriving_wait(pcb->data, pcb, pcb->process_start, pcb->user_id);
 	dispatcher(pcb);
 	FCFS_running(pcb);
 	termination(pcb);

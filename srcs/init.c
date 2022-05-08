@@ -94,10 +94,12 @@ void	parse_options(int argc, char **argv, t_data *data)
 
 void	init_semaphores(t_data *data)
 {
-	unlink("dispatcher");
-	unlink("stop");
-	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, data->process_cores);
+	sem_unlink("dispatcher");
+	sem_unlink("stop");
+	sem_unlink("moniter_sem");
+	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, 1);
 	data->stop = sem_open("stop", O_CREAT, 0600, 1);
+	data->moniter_sem = sem_open("moniter_sem", O_CREAT, 0600, 1);
 }
 
 void	init(int argc, char **argv, t_data *data)

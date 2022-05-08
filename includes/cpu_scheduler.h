@@ -7,8 +7,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/types.h>
+#include <pthread.h>
 #include <sys/time.h>
 #include <semaphore.h>
+#include <signal.h>
 
 #define FALSE			0
 #define TRUE			1
@@ -45,10 +47,12 @@ typedef struct s_PCB
 	uint64_t		resister;
 	struct s_data	*data;
 	uint64_t		process_start;
+	uint64_t		readyque_arrived_time;
 	uint64_t		running_start;
 	uint64_t		waiting_time;
 	uint64_t		turnaround_time;
 	uint64_t		cost_time;
+	int				done_count;
 }	t_PCB;
 
 /*
@@ -59,6 +63,7 @@ typedef struct s_process_table_node
 	struct s_process_table_node	*next;
 	struct s_process_table_node	*prev;
 	pid_t						pid;
+	pid_t						pid_k;
 	t_PCB						*pcb;
 }	t_process_table_node;
 
@@ -89,6 +94,8 @@ typedef struct s_data
 	uint64_t		*time_quantum;
 	sem_t			*dispatcher;
 	sem_t			*stop;
+	sem_t			*moniter_sem;
+	pthread_t		moniter;
 }	t_data;
 
 void		update_cost_time(t_PCB *pcb);
@@ -149,6 +156,6 @@ void		init_process(t_process_table_node *process_table_node, int i);
 void		start_process(t_data *data);
 
 uint64_t	get_time(void);
-void		arriving_wait(t_data *data, uint64_t start, int id);
+void		arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id);
 
 #endif
