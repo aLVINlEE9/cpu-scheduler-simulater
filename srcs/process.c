@@ -34,7 +34,6 @@ void	start_process(t_data *data)
 
 	i = -1;
 	process_table_node = data->process_table->head->next;
-	sem_wait(data->stop);
 	while (++i < data->process_table->count)
 	{
 		printf("%d\n", i);
@@ -47,5 +46,7 @@ void	start_process(t_data *data)
 		}
 		process_table_node = process_table_node->next;
 	}
-	sem_wait(data->stop);
+	i = -1;
+	while (++i < data->process_table->count)
+		wait(NULL);
 }
