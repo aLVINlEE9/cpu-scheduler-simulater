@@ -1,11 +1,5 @@
 #include "../../includes/cpu_scheduler.h"
 
-void	update_cost_time(t_PCB *pcb)
-{
-	pcb->cost_time = get_time() - pcb->running_start;
-	usleep(50);
-}
-
 void	FCFS_running(t_PCB *pcb)
 {
 	while (1)
@@ -17,50 +11,11 @@ void	FCFS_running(t_PCB *pcb)
 	}
 }
 
-void	termination(t_PCB *pcb)
-{
-	pcb->state = TERMINATED;
-	pcb->waiting_time = pcb->running_start - pcb->readyque_arrived_time;
-	pcb->turnaround_time = pcb->waiting_time + pcb->cost_time;
-	printf("PROCESS: %d\t\tPID: %d\t\tTurnarount time: %lld\t\tWaiting time: %lld\n", \
-			pcb->user_id, pcb->pid, pcb->turnaround_time, pcb->waiting_time);
-	sem_post(pcb->data->dispatcher);
-}
-
-void	*moniter(void *data)
-{
-	t_PCB	*pcb;
-	t_process_table_node	*process_table_node;
-	int	i;
-
-	pcb = (t_PCB *)data;
-	while (1)
-	{
-		sem_wait(pcb->data->moniter_sem);
-		process_table_node = pcb->data->process_table->head->next;
-		i = -1;
-		while (++i < pcb->data->process_cores)
-		{
-			if (pcb->data->done_count == pcb->data->process_cores - 1)
-			{
-				sem_post(pcb->data->stop);
-				break;
-			}
-			process_table_node = process_table_node->next;
-		}
-
-		sem_post(pcb->data->moniter_sem);
-	}
-	return ((void *)0);
-}
-
 int	FCFS_start(t_process_table_node *process_table_node)
 {
 	t_PCB *pcb;
 
 	pcb = process_table_node->pcb;
-	pthread_create(&pcb->data->moniter, NULL, moniter, (void *)pcb);
-	pthread_detach(pcb->data->moniter);
 	arriving_wait(pcb->data, pcb, pcb->process_start, pcb->user_id);
 	dispatcher(pcb);
 	FCFS_running(pcb);

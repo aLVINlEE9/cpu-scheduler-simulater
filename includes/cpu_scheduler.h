@@ -157,5 +157,6 @@ void		start_process(t_data *data);
 
 uint64_t	get_time(void);
 void		arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id);
+char		*ft_itoa(int n);
 
 #endif
