@@ -46,6 +46,10 @@ typedef struct s_PCB
 	process_state	state;
 	uint64_t		resister;
 	struct s_data	*data;
+	uint64_t		burst_time;
+	uint64_t		arriving_time;
+	uint64_t		priority;
+	uint64_t		time_quantum;
 	uint64_t		process_start;
 	uint64_t		readyque_arrived_time;
 	uint64_t		running_start;
@@ -93,9 +97,7 @@ typedef struct s_data
 	uint64_t		*time_quantum;
 	sem_t			*dispatcher;
 	sem_t			*stop;
-	sem_t			*moniter_sem;
-	pthread_t		moniter;
-	int				done_count;
+	int				done;
 }	t_data;
 
 void		update_cost_time(t_PCB *pcb);
@@ -154,6 +156,9 @@ void		init_process_table(t_data *data);
 
 void		init_process(t_process_table_node *process_table_node, int i);
 void		start_process(t_data *data);
+
+int			compare_burst(const void * a, const void * b);
+void		sort(t_data *data, t_process_table *process_table);
 
 uint64_t	get_time(void);
 void		arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id);

@@ -96,22 +96,20 @@ void	init_semaphores(t_data *data)
 {
 	sem_unlink("dispatcher");
 	sem_unlink("stop");
-	sem_unlink("moniter_sem");
 	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, 1);
 	data->stop = sem_open("stop", O_CREAT, 0600, 1);
-	data->moniter_sem = sem_open("moniter_sem", O_CREAT, 0600, 1);
 }
 
 void	init(int argc, char **argv, t_data *data)
 {
 	if (argc > 2)
 	{
+		data->done = 0;
 		parse_algorithm(argv[1], data);
 		parse_process_cores(argv[2], data);
 		parse_options(argc, argv, data);
 		init_semaphores(data);
 		init_process_table(data);
-		data->done_count = 0;
 	}
 	else
 		error_print("bad arguments[input](non input)");
