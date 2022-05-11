@@ -33,9 +33,11 @@ void	start_process(t_data *data)
 
 	i = -1;
 	process_table_node = data->process_table->head->next;
+	done = mmap(NULL, sizeof *done, PROT_READ | PROT_WRITE, 
+					MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	*done = 0;
 	while (++i < data->process_table->count)
 	{
-		printf("%d\n", i);
 		process_table_node->pid_k = fork();
 		if (process_table_node->pid_k == 0)
 		{

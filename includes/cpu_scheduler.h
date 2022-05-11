@@ -11,6 +11,8 @@
 #include <sys/time.h>
 #include <semaphore.h>
 #include <signal.h>
+#include <sys/mman.h>
+
 
 #define FALSE			0
 #define TRUE			1
@@ -35,6 +37,8 @@ typedef enum e_process_state
 	WAITING,
 	TERMINATED
 }	process_state;
+
+static int *done;
 
 /*
 	PCB
@@ -147,6 +151,7 @@ void		init_semaphores(t_data *data);
 void		init(int argc, char **argv, t_data *data);
 
 void		print_log(t_data *data);
+void		write_log(t_PCB *pcb);
 
 void		print_scheduling_info(t_data *data);
 

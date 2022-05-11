@@ -40,7 +40,7 @@ void	print_log(t_data *data)
 	t_process_table_node	*process_table_node;
 
 	i = -1;
-	printf("\n\n######################\t\tresult\t\t######################\n\n\n");
+	printf("\n\n######################\t\t\t\tresult\t\t\t\t######################\n\n\n");
 	process_table_node = data->process_table->head->next;
 	while (++i < data->process_cores)
 	{
