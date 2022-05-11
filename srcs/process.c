@@ -21,7 +21,6 @@ void	release_resources(t_data *data)
 		process_table_node = process_table_node->next;
 	}
 	sem_close(data->stop);
-	sem_close(data->moniter_sem);
 	sem_close(data->dispatcher);
 	free(data->arriving_time);
 	free(data->burst_time);

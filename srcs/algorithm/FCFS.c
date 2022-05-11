@@ -28,5 +28,6 @@ int	FCFS(t_data *data)
 {
 	start_process(data);
 	sem_post(data->stop);
+	print_log(data);
 	return (0);
 }

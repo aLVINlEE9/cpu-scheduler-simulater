@@ -120,6 +120,7 @@ int			RR_start(t_process_table_node *process_table_node);
 int			RR(t_data *data);
 
 int			SJF_start(t_process_table_node *process_table_node);
+void		SJF_wait(t_data *data, t_PCB *pcb, int id);
 int			SJF(t_data *data);
 
 int			SRTF_start(t_process_table_node *process_table_node);
@@ -145,6 +146,8 @@ void		parse_options(int argc, char **argv, t_data *data);
 void		init_semaphores(t_data *data);
 void		init(int argc, char **argv, t_data *data);
 
+void		print_log(t_data *data);
+
 void		print_scheduling_info(t_data *data);
 
 void		create_pcb(t_data *data, t_PCB *pcb, int id);
@@ -163,5 +166,6 @@ void		sort(t_data *data, t_process_table *process_table);
 uint64_t	get_time(void);
 void		arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id);
 char		*ft_itoa(int n);
+char		**ft_split(char const *s, char c);
 
 #endif

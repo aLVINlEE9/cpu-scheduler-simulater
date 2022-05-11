@@ -9,6 +9,9 @@ SRCS 	=	srcs/main.c				\
 			srcs/process.c			\
 			srcs/wait.c				\
 			srcs/nodes.c			\
+			srcs/sort.c				\
+			srcs/log.c				\
+			srcs/termination.c		\
 			srcs/util.c				\
 			srcs/algorithm/FCFS.c	\
 			srcs/algorithm/HRN.c	\
