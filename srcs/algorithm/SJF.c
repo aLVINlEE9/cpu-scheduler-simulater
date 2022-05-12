@@ -2,6 +2,7 @@
 
 void	SJF_wait(t_data *data, t_PCB *pcb, int id)
 {
+	pcb->state = WAITING;
 	while (1)
 	{
 		if (data->priority[id - 1] == (uint64_t)data->done)
@@ -32,6 +33,7 @@ int	SJF_start(t_data *data, t_process_table_node *process_table_node)
 
 	pcb = process_table_node->pcb;
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
+	pcb->state = READY;
 	SJF_wait(data, pcb, pcb->user_id);
 	dispatcher(pcb);
 	SJF_running(pcb);

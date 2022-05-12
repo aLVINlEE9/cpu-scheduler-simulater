@@ -44,6 +44,7 @@ typedef enum e_process_state
 typedef struct s_PCB
 {
 	pid_t			pid;
+	pthread_t		tid;
 	int				user_id;
 	process_state	state;
 	uint64_t		resister;
