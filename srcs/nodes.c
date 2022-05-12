@@ -7,10 +7,10 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 	pcb->state = NEW;
 	pcb->resister = 0;
 	pcb->data = data;
-	pcb->burst_time = data->burst_time[id - 1];
-	pcb->arriving_time = data->arriving_time[id - 1];
-	pcb->priority = data->priority[id - 1];
-	pcb->time_quantum = data->time_quantum[id - 1];
+	pcb->burst_time = data->burst_time[id];
+	pcb->arriving_time = data->arriving_time[id];
+	pcb->priority = data->priority[id];
+	pcb->time_quantum = data->time_quantum[id];
 	pcb->process_start = 0;
 	pcb->readyque_arrived_time = 0;
 	pcb->running_start = 0;

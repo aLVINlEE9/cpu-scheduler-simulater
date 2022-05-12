@@ -23,15 +23,15 @@ void	sort(t_data *data, t_process_table *process_table)
 	}
 	qsort(burst_time, data->process_cores, sizeof(uint64_t), compare_burst);
 	i = -1;
-	j = -1;
 	while (++i < data->process_cores)
 	{
 		process_table_node = process_table->head->next;
+		j = -1;
 		while (++j < data->process_cores)
 		{
 			if (burst_time[i] == process_table_node->pcb->burst_time)
 			{
-				data->priority[process_table_node->pcb->user_id - 1] = i;
+				data->priority[j] = data->process_cores - i - 1;
 				process_table_node->pcb->priority = i;
 				break ;
 			}

@@ -105,27 +105,27 @@ typedef struct s_data
 void		update_cost_time(t_PCB *pcb);
 void		FCFS_running(t_PCB *pcb);
 void		termination(t_PCB *pcb);
-int			FCFS_start(t_process_table_node *process_table_node);
+int			FCFS_start(t_data *data, t_process_table_node *process_table_node);
 void		print_result(t_data *data);
 int			FCFS(t_data *data);
 
-int			HRN_start(t_process_table_node *process_table_node);
+int			HRN_start(t_data *data, t_process_table_node *process_table_node);
 int 		HRN(t_data *data);
 
-int			MFQ_start(t_process_table_node *process_table_node);
+int			MFQ_start(t_data *data, t_process_table_node *process_table_node);
 int			MFQ(t_data *data);
 
-int			PS_start(t_process_table_node *process_table_node);
+int			PS_start(t_data *data, t_process_table_node *process_table_node);
 int			PS(t_data *data);
 
-int			RR_start(t_process_table_node *process_table_node);
+int			RR_start(t_data *data, t_process_table_node *process_table_node);
 int			RR(t_data *data);
 
 int			SJF_start(t_data *data, t_process_table_node *process_table_node);
 void		SJF_wait(t_data *data, t_PCB *pcb, int id);
 int			SJF(t_data *data);
 
-int			SRTF_start(t_process_table_node *process_table_node);
+int			SRTF_start(t_data *data, t_process_table_node *process_table_node);
 int			SRTF(t_data *data);
 
 void		dispatcher(t_PCB *pcb);

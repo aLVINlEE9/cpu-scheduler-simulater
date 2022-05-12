@@ -2,30 +2,15 @@
 
 void	SJF_wait(t_data *data, t_PCB *pcb, int id)
 {
-	uint64_t	i;
-	int flag;
-	
-	flag = 0;
-	sem_wait(data->stop);
 	while (1)
 	{
-		i = 0;
-		while (i < (uint64_t)data->process_cores)
+		if (data->priority[id - 1] == (uint64_t)data->done)
 		{
-			if (data->priority[id - 1] == i && (uint64_t)data->done >= i)
-			{
-				data->done += 1;
-				flag = 1;
-				printf("%d %d\n", id, data->done);
-				sem_post(data->stop);
-				break ;
-			}
-			i++;
-		}
-		if (flag == 1)
+			data->done += 1;
+			sem_wait(data->stop);
 			break ;
+		}
 	}
-	sem_wait(data->stop);
 	pcb->state = READY;
 	sem_post(data->stop);
 }

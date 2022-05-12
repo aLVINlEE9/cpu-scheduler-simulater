@@ -11,12 +11,12 @@ void	FCFS_running(t_PCB *pcb)
 	}
 }
 
-int	FCFS_start(t_process_table_node *process_table_node)
+int	FCFS_start(t_data *data, t_process_table_node *process_table_node)
 {
 	t_PCB *pcb;
 
 	pcb = process_table_node->pcb;
-	arriving_wait(pcb->data, pcb, pcb->process_start, pcb->user_id);
+	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
 	pcb->state = READY;
 	dispatcher(pcb);
 	FCFS_running(pcb);
