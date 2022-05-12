@@ -45,12 +45,23 @@ void	print_scheduling_info(t_data *data)
 
 int main(int argc, char **argv)
 {
-	t_data	data;
+	t_data	*data;
+	int	fd;
 
 	srand(time(NULL));
-	init(argc, argv, &data);
-	print_scheduling_info(&data);
-	data.scheduling_algo(&data);
-	print_log(&data);
+	unlink("./log/structMMAP");
+	unlink("./log/1");
+	unlink("./log/2");
+	unlink("./log/3");
+	unlink("./log/4");
+	fd = open("./log/structMMAP", O_RDWR|O_CREAT, 0660);
+	ftruncate(fd, sizeof(t_data));
+	data = mmap(0, sizeof(t_data), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
+	init(argc, argv, data);
+	print_scheduling_info(data);
+	data->scheduling_algo(data);
+	print_log(data);
+	munmap(data, sizeof(t_data));
+	
 	exit(0);
 }

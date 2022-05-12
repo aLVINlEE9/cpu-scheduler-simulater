@@ -38,8 +38,6 @@ typedef enum e_process_state
 	TERMINATED
 }	process_state;
 
-static int *done;
-
 /*
 	PCB
 */
@@ -93,7 +91,7 @@ typedef struct s_data
 	t_process_table *process_table;
 	int				process_cores;
 	int				(* scheduling_algo)(struct s_data *);
-	int				(* algo_start)(t_process_table_node *);
+	int				(* algo_start)(struct s_data *, t_process_table_node *);
 	int				*option_tf;
 	uint64_t		*burst_time;
 	uint64_t		*arriving_time;
@@ -123,7 +121,7 @@ int			PS(t_data *data);
 int			RR_start(t_process_table_node *process_table_node);
 int			RR(t_data *data);
 
-int			SJF_start(t_process_table_node *process_table_node);
+int			SJF_start(t_data *data, t_process_table_node *process_table_node);
 void		SJF_wait(t_data *data, t_PCB *pcb, int id);
 int			SJF(t_data *data);
 

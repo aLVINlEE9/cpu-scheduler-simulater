@@ -33,16 +33,13 @@ void	start_process(t_data *data)
 
 	i = -1;
 	process_table_node = data->process_table->head->next;
-	done = mmap(NULL, sizeof *done, PROT_READ | PROT_WRITE, 
-					MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	*done = 0;
 	while (++i < data->process_table->count)
 	{
 		process_table_node->pid_k = fork();
 		if (process_table_node->pid_k == 0)
 		{
 			init_process(process_table_node, i);
-			data->algo_start(process_table_node);
+			data->algo_start(data, process_table_node);
 			exit(0);
 		}
 		process_table_node = process_table_node->next;

@@ -6,18 +6,17 @@ void	SJF_wait(t_data *data, t_PCB *pcb, int id)
 	int flag;
 	
 	flag = 0;
-	printf("%d %d\n", id, *done);
 	sem_wait(data->stop);
 	while (1)
 	{
 		i = 0;
 		while (i < (uint64_t)data->process_cores)
 		{
-			if (data->priority[id - 1] == i && (uint64_t)*done >= i)
+			if (data->priority[id - 1] == i && (uint64_t)data->done >= i)
 			{
-				*done += 1;
+				data->done += 1;
 				flag = 1;
-				printf("%d\n", *done);
+				printf("%d %d\n", id, data->done);
 				sem_post(data->stop);
 				break ;
 			}
@@ -42,13 +41,13 @@ void	SJF_running(t_PCB *pcb)
 	}
 }
 
-int	SJF_start(t_process_table_node *process_table_node)
+int	SJF_start(t_data *data, t_process_table_node *process_table_node)
 {
 	t_PCB *pcb;
 
 	pcb = process_table_node->pcb;
-	arriving_wait(pcb->data, pcb, pcb->process_start, pcb->user_id);
-	SJF_wait(pcb->data, pcb, pcb->user_id);
+	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
+	SJF_wait(data, pcb, pcb->user_id);
 	dispatcher(pcb);
 	SJF_running(pcb);
 	termination(pcb);
