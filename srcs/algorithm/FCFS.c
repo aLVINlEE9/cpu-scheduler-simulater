@@ -27,6 +27,6 @@ int	FCFS_start(t_data *data, t_process_table_node *process_table_node)
 int	FCFS(t_data *data)
 {
 	start_process(data);
-	sem_post(data->stop);
+	sem_post(data->wait);
 	return (0);
 }

@@ -8,12 +8,12 @@ void	SJF_wait(t_data *data, t_PCB *pcb, int id)
 		if (data->priority[id - 1] == (uint64_t)data->done)
 		{
 			data->done += 1;
-			sem_wait(data->stop);
+			sem_wait(data->wait);
 			break ;
 		}
 	}
 	pcb->state = READY;
-	sem_post(data->stop);
+	sem_post(data->wait);
 }
 
 void	SJF_running(t_PCB *pcb)

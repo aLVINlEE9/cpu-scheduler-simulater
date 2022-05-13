@@ -99,7 +99,8 @@ typedef struct s_data
 	uint64_t		*priority;
 	uint64_t		*time_quantum;
 	sem_t			*dispatcher;
-	sem_t			*stop;
+	sem_t			*wait;
+	sem_t			*moniter_wait;
 	int				done;
 }	t_data;
 

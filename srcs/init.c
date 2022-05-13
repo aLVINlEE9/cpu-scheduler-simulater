@@ -95,9 +95,11 @@ void	parse_options(int argc, char **argv, t_data *data)
 void	init_semaphores(t_data *data)
 {
 	sem_unlink("dispatcher");
-	sem_unlink("stop");
+	sem_unlink("wait");
+	sem_unlink("moniter_wait");
 	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, 1);
-	data->stop = sem_open("stop", O_CREAT, 0600, 1);
+	data->wait = sem_open("wait", O_CREAT, 0600, 1);
+	data->moniter_wait = sem_open("moniter_wait", O_CREAT, 0600, 1);
 }
 
 void	init(int argc, char **argv, t_data *data)
