@@ -33,7 +33,6 @@ int	SJF_start(t_data *data, t_process_table_node *process_table_node)
 
 	pcb = process_table_node->pcb;
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
-	pcb->state = READY;
 	SJF_wait(data, pcb, pcb->user_id);
 	dispatcher(pcb);
 	SJF_running(pcb);

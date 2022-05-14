@@ -12,17 +12,19 @@ void	*comp_moniter(void *pcb_v)
 	process_table_node = pcb->data->process_table->head->next;
 	while (1)
 	{
+		// sem_wait(pcb->data->moniter_wait);
 		if (pcb->state == RUNNING)
 		{
 			i = -1;
-			temp = pcb->burst_time - pcb->cost_time;
 			pcb_rec = pcb;
+			temp = pcb->burst_time - pcb->cost_time;
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
-				printf("(%d) %lld < %lld\n", process_table_node->pcb->user_id, process_table_node->pcb->burst_time - \
-						process_table_node->pcb->cost_time, temp);
-				if ((process_table_node->pcb->state == READY || \
+				printf("%d\n", process_table_node->pcb->state);
+				// printf("id:%d, state:%d, remaining_pt:%lld, remaining_now:%lld\n", pcb->user_id, process_table_node->pcb->state, \
+				// 		process_table_node->pcb->burst_time - process_table_node->pcb->cost_time, temp);
+				if (pcb->user_id != i && (process_table_node->pcb->state == READY || \
 					process_table_node->pcb->state == WAITING) \
 					&& process_table_node->pcb->burst_time - \
 					process_table_node->pcb->cost_time < temp)
@@ -30,19 +32,21 @@ void	*comp_moniter(void *pcb_v)
 					temp = process_table_node->pcb->burst_time - \
 							process_table_node->pcb->cost_time;
 					pcb_rec = process_table_node->pcb;
+					printf("%d %d %lld < %lld\n", process_table_node->pcb->state, process_table_node->pcb->user_id, \
+					process_table_node->pcb->burst_time - process_table_node->pcb->cost_time, temp);
 				}
 				process_table_node = process_table_node->next;
 				usleep(10);
 			}
 			if (pcb_rec != pcb)
 			{
-				sem_wait(pcb->data->moniter_wait);
-				printf("fast %d\n", pcb_rec->user_id);
 				pcb_rec->state = RUNNING;
 				pcb->state = WAITING;
 				pcb->data->done = pcb_rec->user_id;
+				printf("fastid %d, %d %d\n", pcb_rec->user_id, pcb_rec->state, pcb->state);
 			}
 		}
+		// sem_post(pcb->data->moniter_wait);
 	}
 	return ((void *)0);
 }
@@ -55,7 +59,7 @@ void	SRTF_wait(t_data *data, int id)
 		{
 			sem_wait(data->wait);
 			printf("wait rel%d\n", id);
-			data->done = 0;
+			data->done = -1;
 			break ;
 		}
 	}
@@ -88,7 +92,6 @@ int	SRTF_start(t_data *data, t_process_table_node *process_table_node)
 	pthread_create(&pcb->tid1, NULL, comp_moniter, (void *)pcb);
 	pthread_detach(pcb->tid1);
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
-	pcb->state = READY;
 	dispatcher(pcb);
 	SRTF_running(pcb);
 	termination(pcb);
