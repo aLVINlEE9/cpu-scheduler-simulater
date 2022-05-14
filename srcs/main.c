@@ -50,6 +50,10 @@ int main(int argc, char **argv)
 
 	srand(time(NULL));
 	unlink("./log/structMMAP");
+	unlink("./log/pcbMMAP_0");
+	unlink("./log/pcbMMAP_1");
+	unlink("./log/pcbMMAP_2");
+	unlink("./log/pcbMMAP_3");
 	unlink("./log/1");
 	unlink("./log/2");
 	unlink("./log/3");

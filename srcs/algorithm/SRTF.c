@@ -92,7 +92,6 @@ int	SRTF_start(t_data *data, t_process_table_node *process_table_node)
 	pthread_create(&pcb->tid1, NULL, comp_moniter, (void *)pcb);
 	pthread_detach(pcb->tid1);
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
-	printf("state : %d\n", pcb->state);
 	dispatcher(pcb);
 	SRTF_running(pcb);
 	termination(pcb);
