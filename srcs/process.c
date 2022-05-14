@@ -20,7 +20,8 @@ void	release_resources(t_data *data)
 		kill(process_table_node->pid_k, SIGKILL);
 		process_table_node = process_table_node->next;
 	}
-	sem_close(data->stop);
+	sem_close(data->wait);
+	sem_close(data->moniter_wait);
 	sem_close(data->dispatcher);
 	free(data->arriving_time);
 	free(data->burst_time);
