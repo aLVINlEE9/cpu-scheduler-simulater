@@ -22,15 +22,21 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 void	append_process_table_node(t_data *data, t_process_table *process_table, \
 									t_process_table_node *new_node, int id)
 {
+	int	fd;
+	char	*pid_ch;
+	char	dir[1000] = "./log/pcbMMAP_";
+
 	process_table->tail->prev->next = new_node;
 	new_node->prev = process_table->tail->prev;
 	new_node->next = process_table->tail;
 	process_table->tail->prev = new_node;
 	process_table->count++;
 	new_node->pid = 0;
-	new_node->pcb = (t_PCB *)malloc(sizeof(t_PCB));
-	if (new_node->pcb == NULL)
-		error_print("memory error[node](failed to malloc memory)");
+	pid_ch = ft_itoa((int)id);
+	strcat(dir, pid_ch);
+	fd = open(dir, O_RDWR|O_CREAT, 0660);
+	ftruncate(fd, sizeof(t_PCB));
+	new_node->pcb = mmap(0, sizeof(t_PCB), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
 	create_pcb(data, new_node->pcb, id);
 }
 

@@ -21,7 +21,7 @@ void	*comp_moniter(void *pcb_v)
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
-				printf("%d\n", process_table_node->pcb->state);
+				// printf("%d\n", process_table_node->pcb->state);
 				// printf("id:%d, state:%d, remaining_pt:%lld, remaining_now:%lld\n", pcb->user_id, process_table_node->pcb->state, \
 				// 		process_table_node->pcb->burst_time - process_table_node->pcb->cost_time, temp);
 				if (pcb->user_id != i && (process_table_node->pcb->state == READY || \
@@ -92,6 +92,7 @@ int	SRTF_start(t_data *data, t_process_table_node *process_table_node)
 	pthread_create(&pcb->tid1, NULL, comp_moniter, (void *)pcb);
 	pthread_detach(pcb->tid1);
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
+	printf("state : %d\n", pcb->state);
 	dispatcher(pcb);
 	SRTF_running(pcb);
 	termination(pcb);

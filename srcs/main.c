@@ -62,6 +62,5 @@ int main(int argc, char **argv)
 	data->scheduling_algo(data);
 	print_log(data);
 	munmap(data, sizeof(t_data));
-	
 	exit(0);
 }
