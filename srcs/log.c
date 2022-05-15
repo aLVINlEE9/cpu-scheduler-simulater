@@ -43,7 +43,7 @@ void	print_log(t_data *data)
 	process_table_node = data->process_table->head->next;
 	while (++i < data->process_cores)
 	{
-		read_log(i + 1);
+		read_log(i);
 		process_table_node = process_table_node->next;
 	}
 }
