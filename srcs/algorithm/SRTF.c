@@ -13,6 +13,7 @@ void	*comp_moniter(void *pcb_v)
 	process_table_node = pcb->data->process_table->head->next;
 	while (1)
 	{
+		sem_wait(pcb->data->moniter_wait);
 		if (pcb->state == RUNNING)
 		{
 			i = -1;
@@ -55,6 +56,13 @@ void	*comp_moniter(void *pcb_v)
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
+				if (process_table_node->pcb->state == WAITING && process_table_node->pcb->burst_time - \
+					process_table_node->pcb->cost_time < temp)
+				{
+					temp = process_table_node->pcb->burst_time - \
+							process_table_node->pcb->cost_time;
+					pcb_rec = process_table_node->pcb;
+				}
 				// printf("id %d state%d\n", process_table_node->pcb->user_id, process_table_node->pcb->state);
 				flag = flag && (process_table_node->pcb->state == TERMINATED || process_table_node->pcb->state == WAITING);
 				process_table_node = process_table_node->next;
@@ -62,11 +70,12 @@ void	*comp_moniter(void *pcb_v)
 			}
 			if (flag == 1)
 			{
-				pcb->state = RUNNING;
-				pcb->data->done = pcb->user_id;
+				pcb_rec->state = RUNNING;
+				pcb->data->done = pcb_rec->user_id;
 				printf("waiting out signal id:%d n id:%d, fast state:%d n state:%d\n", pcb_rec->user_id, pcb->user_id, pcb_rec->state, pcb->state);
 			}
 		}
+		sem_post(pcb->data->moniter_wait);
 	}
 	return ((void *)0);
 }
@@ -96,7 +105,7 @@ void	SRTF_running(t_PCB *pcb)
 		{
 			printf("waiting %d\n", pcb->user_id);
 			sem_post(pcb->data->dispatcher);
-			// sem_post(pcb->data->moniter_wait);
+			sem_post(pcb->data->moniter_wait);
 			SRTF_wait(pcb->data, pcb->user_id);
 			pcb->running_start = get_time() - pcb->cost_time;
 			printf("out%d\n", pcb->user_id);
