@@ -14,6 +14,7 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 	pcb->process_start = 0;
 	pcb->readyque_arrived_time = 0;
 	pcb->running_start = 0;
+	pcb->real_running_start = 0;
 	pcb->waiting_time = 0;
 	pcb->turnaround_time = 0;
 	pcb->cost_time = 0;
