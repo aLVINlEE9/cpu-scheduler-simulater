@@ -4,7 +4,7 @@ void	init_process(t_process_table_node *process_table_node, int i)
 {
 	process_table_node->pid = getpid();
 	process_table_node->pcb->pid = process_table_node->pid;
-	process_table_node->pcb->user_id = i + 1;
+	process_table_node->pcb->user_id = i;
 	process_table_node->pcb->process_start = get_time();
 }
 

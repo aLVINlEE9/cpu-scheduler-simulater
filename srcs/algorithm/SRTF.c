@@ -12,7 +12,7 @@ void	*comp_moniter(void *pcb_v)
 	process_table_node = pcb->data->process_table->head->next;
 	while (1)
 	{
-		// sem_wait(pcb->data->moniter_wait);
+		sem_wait(pcb->data->moniter_wait);
 		if (pcb->state == RUNNING)
 		{
 			i = -1;
@@ -32,7 +32,7 @@ void	*comp_moniter(void *pcb_v)
 					temp = process_table_node->pcb->burst_time - \
 							process_table_node->pcb->cost_time;
 					pcb_rec = process_table_node->pcb;
-					printf("%d %d %lld < %lld\n", process_table_node->pcb->state, process_table_node->pcb->user_id, \
+					printf("state: %d id: %d %lld < %lld\n", process_table_node->pcb->state, process_table_node->pcb->user_id, \
 					process_table_node->pcb->burst_time - process_table_node->pcb->cost_time, temp);
 				}
 				process_table_node = process_table_node->next;
@@ -43,10 +43,10 @@ void	*comp_moniter(void *pcb_v)
 				pcb_rec->state = RUNNING;
 				pcb->state = WAITING;
 				pcb->data->done = pcb_rec->user_id;
-				printf("fastid %d, %d %d\n", pcb_rec->user_id, pcb_rec->state, pcb->state);
+				printf("fast id:%d n id:%d, fast state:%d n state:%d\n", pcb_rec->user_id, pcb->user_id, pcb_rec->state, pcb->state);
 			}
 		}
-		// sem_post(pcb->data->moniter_wait);
+		sem_post(pcb->data->moniter_wait);
 	}
 	return ((void *)0);
 }
@@ -57,13 +57,13 @@ void	SRTF_wait(t_data *data, int id)
 	{
 		if (id == data->done)
 		{
-			sem_wait(data->wait);
 			printf("wait rel%d\n", id);
+			// sem_wait(data->wait);
 			data->done = -1;
 			break ;
 		}
 	}
-	sem_post(data->wait);
+	// sem_post(data->wait);
 }
 
 void	SRTF_running(t_PCB *pcb)
@@ -71,14 +71,16 @@ void	SRTF_running(t_PCB *pcb)
 	while (1)
 	{
 		update_cost_time(pcb);
+		// printf("%d\n", pcb->user_id);
 		if (pcb->state == WAITING)
 		{
+			printf("waiting %d\n", pcb->user_id);
 			sem_post(pcb->data->dispatcher);
-			SRTF_wait(pcb->data, pcb->user_id);
 			sem_post(pcb->data->moniter_wait);
+			SRTF_wait(pcb->data, pcb->user_id);
 			sem_wait(pcb->data->dispatcher);
 		}
-		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id - 1])
+		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id])
 			break ;
 		pcb->resister += pcb->cost_time;
 	}

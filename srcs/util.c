@@ -3,7 +3,8 @@
 void	update_cost_time(t_PCB *pcb)
 {
 	pcb->cost_time = get_time() - pcb->running_start;
-	usleep(50);
+	usleep(10);
+	// printf("id%d cost%lld\n", pcb->user_id, pcb->cost_time);
 }
 
 uint64_t	get_time(void)
