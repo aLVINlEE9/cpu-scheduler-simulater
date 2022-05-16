@@ -49,15 +49,8 @@ int main(int argc, char **argv)
 	int	fd;
 
 	srand(time(NULL));
-	unlink("./log/structMMAP");
-	unlink("./log/pcbMMAP_0");
-	unlink("./log/pcbMMAP_1");
-	unlink("./log/pcbMMAP_2");
-	unlink("./log/pcbMMAP_3");
-	unlink("./log/0");
-	unlink("./log/1");
-	unlink("./log/2");
-	unlink("./log/3");
+	system("rm -rf ./log");
+	system("mkdir ./log");
 	fd = open("./log/structMMAP", O_RDWR|O_CREAT, 0660);
 	ftruncate(fd, sizeof(t_data));
 	data = mmap(0, sizeof(t_data), PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
