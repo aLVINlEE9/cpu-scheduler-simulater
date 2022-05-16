@@ -6,5 +6,4 @@ void	dispatcher(t_PCB *pcb)
 	pcb->state = RUNNING;
 	pcb->running_start = get_time();
 	pcb->real_running_start = get_time();
-	sem_post(pcb->data->wait);
 }

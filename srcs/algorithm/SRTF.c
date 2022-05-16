@@ -129,6 +129,7 @@ int	SRTF_start(t_data *data, t_process_table_node *process_table_node)
 	arriving_wait(data, pcb, pcb->process_start, pcb->user_id);
 	SRTF_wait(pcb);
 	dispatcher(pcb);
+	sem_post(pcb->data->wait);
 	SRTF_running(pcb);
 	termination(pcb);
 	return (0);
