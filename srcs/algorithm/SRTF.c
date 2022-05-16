@@ -25,13 +25,11 @@ void	*comp_moniter(void *pcb_v)
 				if (pcb->user_id != i && (process_table_node->pcb->state == READY || \
 					process_table_node->pcb->state == WAITING) \
 					&& process_table_node->pcb->burst_time - \
-					process_table_node->pcb->cost_time < temp)
+					process_table_node->pcb->cost_time <= temp)
 				{
 					temp = process_table_node->pcb->burst_time - \
 							process_table_node->pcb->cost_time;
 					pcb_rec = process_table_node->pcb;
-					printf("nid: %d nstate: %d state: %d id: %d %lld < %lld\n", pcb->user_id, pcb->state, process_table_node->pcb->state, process_table_node->pcb->user_id, \
-					process_table_node->pcb->burst_time - process_table_node->pcb->cost_time, temp);
 				}
 				process_table_node = process_table_node->next;
 				usleep(10);
@@ -41,10 +39,9 @@ void	*comp_moniter(void *pcb_v)
 				pcb_rec->state = RUNNING;
 				pcb->state = WAITING;
 				pcb->data->done = pcb_rec->user_id;
-				printf("fast id:%d n id:%d, fast state:%d n state:%d\n", pcb_rec->user_id, pcb->user_id, pcb_rec->state, pcb->state);
 			}
 		}
-		else
+		if (pcb->state != RUNNING && pcb->state != NEW)
 		{
 			i = -1;
 			flag = 0;
@@ -53,19 +50,22 @@ void	*comp_moniter(void *pcb_v)
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
-				if (process_table_node->pcb->state != TERMINATED && process_table_node->pcb->burst_time - \
-					process_table_node->pcb->cost_time < temp)
+				if (process_table_node->pcb->state != TERMINATED && process_table_node->pcb->state != NEW && process_table_node->pcb->burst_time - \
+					process_table_node->pcb->cost_time <= temp)
 				{
 					temp = process_table_node->pcb->burst_time - \
 							process_table_node->pcb->cost_time;
 					pcb_rec = process_table_node->pcb;
+					flag = 1;
 				}
-				flag = flag || (process_table_node->pcb->state == TERMINATED);
 				process_table_node = process_table_node->next;
 				usleep(10);
 			}
-			pcb_rec->state = RUNNING;
-			pcb->data->done = pcb_rec->user_id;
+			if (flag)
+			{
+				pcb_rec->state = RUNNING;
+				pcb->data->done = pcb_rec->user_id;
+			}
 		}
 		sem_post(pcb->data->moniter_wait);
 	}
@@ -78,7 +78,6 @@ void	waiting_zone(t_data *data, int id)
 	{
 		if (id == data->done)
 		{
-			printf("waiting %d\n", id);
 			data->done = -1;
 			break ;
 		}
@@ -91,7 +90,6 @@ void	SRTF_wait(t_PCB *pcb)
 	{
 		if (pcb->state == RUNNING)
 		{
-			printf("running %d\n", pcb->user_id);
 			sem_post(pcb->data->moniter_wait);
 			break ;
 		}
@@ -105,7 +103,6 @@ void	SRTF_running(t_PCB *pcb)
 		update_cost_time(pcb);
 		if (pcb->state == WAITING)
 		{
-			printf("if wait %d\n", pcb->user_id);
 			sem_post(pcb->data->dispatcher);
 			sem_post(pcb->data->moniter_wait);
 			waiting_zone(pcb->data, pcb->user_id);
