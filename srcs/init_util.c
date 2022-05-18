@@ -44,7 +44,7 @@ void	option_each_random_sub(uint64_t *arr, uint64_t loop, uint64_t i, uint64_t j
 		if (i == 0)
 			arr[k] = milli_to_micro(rand() % j + 1);
 		else if (i == 1)
-			arr[k] = rand() % j + 1;
+			arr[k] = rand() % j;
 		m = 0;
 		while (m < k)
 		{
@@ -63,7 +63,7 @@ void	option_each_random(int type, t_data *data)
 	if (type == ARRIVING_TIME)
 		option_each_random_sub(data->arriving_time, data->process_cores, 0, 15);
 	if (type == PRIORITY)
-		option_each_random_sub(data->priority, data->process_cores, 1, 5);
+		option_each_random_sub(data->priority, data->process_cores, 1, data->process_cores);
 	if (type == TIME_QUANTUM)
 		option_each_random_sub(data->time_quantum, data->process_cores, 2, 10);
 }
