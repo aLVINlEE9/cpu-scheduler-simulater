@@ -115,7 +115,6 @@ void	SRTF_running(t_PCB *pcb)
 		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id])
 			break ;
 		pcb->resister += pcb->cost_time;
-		usleep(10);
 	}
 }
 
