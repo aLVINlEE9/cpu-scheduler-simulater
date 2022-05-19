@@ -18,6 +18,7 @@ void	create_pcb(t_data *data, t_PCB *pcb, int id)
 	pcb->waiting_time = 0;
 	pcb->turnaround_time = 0;
 	pcb->cost_time = 0;
+	pcb->repeated_times = 0;
 }
 
 void	append_process_table_node(t_data *data, t_process_table *process_table, \

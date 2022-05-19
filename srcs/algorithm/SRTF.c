@@ -37,8 +37,8 @@ void	*comp_moniter(void *pcb_v)
 			if (pcb_rec != pcb)
 			{
 				pcb_rec->state = RUNNING;
-				pcb->state = WAITING;
 				pcb->data->done = pcb_rec->user_id;
+				pcb->state = WAITING;
 			}
 		}
 		if (pcb->state != RUNNING && pcb->state != NEW)
@@ -64,26 +64,14 @@ void	*comp_moniter(void *pcb_v)
 			if (flag)
 			{
 				pcb_rec->state = RUNNING;
+				pcb->data->done = pcb_rec->user_id;
 				if (pcb->state == READY)
 					pcb->state = WAITING;
-				pcb->data->done = pcb_rec->user_id;
 			}
 		}
 		sem_post(pcb->data->moniter_wait);
 	}
 	return ((void *)0);
-}
-
-void	waiting_zone(t_data *data, int id)
-{
-	while (1)
-	{
-		if (id == data->done)
-		{
-			data->done = -1;
-			break ;
-		}
-	}
 }
 
 void	SRTF_wait(t_PCB *pcb)

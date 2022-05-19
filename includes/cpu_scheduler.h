@@ -61,6 +61,7 @@ typedef struct s_PCB
 	uint64_t		waiting_time;
 	uint64_t		turnaround_time;
 	uint64_t		cost_time;
+	int				repeated_times;
 }	t_PCB;
 
 /*
@@ -167,11 +168,12 @@ void		init_process_table(t_data *data);
 void		init_process(t_process_table_node *process_table_node, int i);
 void		start_process(t_data *data);
 
-int			compare_burst(const void * a, const void * b);
-void		sort(t_data *data, t_process_table *process_table);
+int			compare(const void * a, const void * b);
+void		sort(t_data *data, t_process_table *process_table, char *flag);
 
 uint64_t	get_time(void);
 void		arriving_wait(t_data *data, t_PCB *pcb, uint64_t start, int id);
+void		waiting_zone(t_data *data, int id);
 char		*ft_itoa(int n);
 char		**ft_split(char const *s, char c);
 
