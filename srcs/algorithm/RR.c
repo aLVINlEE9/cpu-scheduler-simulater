@@ -67,7 +67,7 @@ void	*timequantum_moniter(void *pcb_v)
 			{
 				pcb->state = RUNNING;
 				pcb->data->done = pcb->user_id;
-				printf("final id:%d cost:%lld priority:%lld changed to:%d\n", pcb->user_id, pcb->cost_time, process_table_node->pcb->priority, process_table_node->pcb->user_id);
+				printf("final id:%d cost:%lld\n", pcb->user_id, pcb->cost_time);
 			}
 		}
 		sem_post(pcb->data->moniter_wait);	
@@ -76,7 +76,7 @@ void	*timequantum_moniter(void *pcb_v)
 
 void	RR_running(t_PCB *pcb)
 {
-	printf("arrived %d\n", pcb->user_id);
+	printf("arrived %d %lld\n", pcb->user_id, pcb->priority);
 	while (1)
 	{
 		update_cost_time(pcb);

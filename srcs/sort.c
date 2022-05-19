@@ -63,7 +63,7 @@ void	sort(t_data *data, t_process_table *process_table, char *flag)
 				if (arriving_time[i] == process_table_node->pcb->arriving_time)
 				{
 					data->priority[j] = data->process_cores - i - 1;
-					process_table_node->pcb->priority = i;
+					process_table_node->pcb->priority = data->process_cores - i - 1;
 					break ;
 				}
 				process_table_node = process_table_node->next;
