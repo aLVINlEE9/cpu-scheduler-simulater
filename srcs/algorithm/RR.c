@@ -5,7 +5,7 @@ void	*timequantum_moniter(void *pcb_v)
 	t_PCB *pcb;
 	uint64_t	priority;
 	t_process_table_node	*process_table_node;
-	int	i, j, flag;
+	int	i, j, flag_1, flag_2;
 
 	pcb = (t_PCB *)pcb_v;
 	while (1)
@@ -21,7 +21,7 @@ void	*timequantum_moniter(void *pcb_v)
 				pcb->repeated_times += 1;
 				priority = -1;
 				i = -1;
-				flag = 0;
+				flag_1 = 0;
 				priority = pcb->data->priority[pcb->user_id];
 				while (++i < pcb->data->process_cores)
 				{
@@ -36,7 +36,7 @@ void	*timequantum_moniter(void *pcb_v)
 							(process_table_node->pcb->state == WAITING || \
 								process_table_node->pcb->state == READY))
 						{
-							flag = 1;
+							flag_1 = 1;
 							process_table_node->pcb->state = RUNNING;
 							pcb->data->done = process_table_node->pcb->user_id;
 							pcb->state = WAITING;
@@ -46,7 +46,7 @@ void	*timequantum_moniter(void *pcb_v)
 						process_table_node = process_table_node->next;
 						usleep(10);
 					}
-					if (flag == 1)
+					if (flag_1 == 1)
 						break ;
 				}
 			}
@@ -54,21 +54,51 @@ void	*timequantum_moniter(void *pcb_v)
 		else if (pcb->state != RUNNING && pcb->state != NEW)
 		{
 			i = -1;
-			flag = 1;
+			flag_1 = 0;
+			flag_2 = 1;
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
 				if (pcb->user_id != i)
-					flag = flag && (process_table_node->pcb->state == TERMINATED);
+					flag_2 = flag_2 && (process_table_node->pcb->state == TERMINATED || process_table_node->pcb->state != RUNNING);
 				process_table_node = process_table_node->next;
 				usleep(10);
 			}
-			if (flag == 1)
+			if (flag_2 == 1)
 			{
-				pcb->state = RUNNING;
-				pcb->data->done = pcb->user_id;
-				printf("final id:%d cost:%lld\n", pcb->user_id, pcb->cost_time);
+				priority = -1;
+				i = -1;
+				priority = pcb->data->priority[pcb->data->terminated];
+				while (++i < pcb->data->process_cores)
+				{
+					j = -1;
+					priority++;
+					process_table_node = pcb->data->process_table->head->next;
+					while (++j < pcb->data->process_cores)
+					{
+						if (priority == process_table_node->pcb->data->priority[j] && \
+							(process_table_node->pcb->state == WAITING || \
+								process_table_node->pcb->state == READY))
+						{
+							flag_1 = 1;
+							process_table_node->pcb->state = RUNNING;
+							pcb->data->done = process_table_node->pcb->user_id;
+							printf("id:%d cost:%lld priority:%lld changed to:%d\n", pcb->user_id, pcb->cost_time, process_table_node->pcb->priority, process_table_node->pcb->user_id);
+							break ;
+						}
+						process_table_node = process_table_node->next;
+						usleep(10);
+					}
+					if (flag_1 == 1)
+						break ;
+				}
 			}
+			// if (flag == 1)
+			// {
+			// 	pcb->state = RUNNING;
+			// 	pcb->data->done = pcb->user_id;
+			// 	printf("final id:%d cost:%lld\n", pcb->user_id, pcb->cost_time);
+			// }
 		}
 		sem_post(pcb->data->moniter_wait);	
 	}

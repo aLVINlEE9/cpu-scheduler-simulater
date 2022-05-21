@@ -107,6 +107,7 @@ void	init(int argc, char **argv, t_data *data)
 	if (argc > 2)
 	{
 		data->done = 0;
+		data->terminated = -1;
 		parse_algorithm(argv[1], data);
 		parse_process_cores(argv[2], data);
 		parse_options(argc, argv, data);
