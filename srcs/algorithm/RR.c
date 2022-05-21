@@ -51,13 +51,15 @@ void	*timequantum_moniter(void *pcb_v)
 				}
 			}
 		}
-		else if (pcb->state != RUNNING && pcb->state != NEW)
+		else if (pcb->state != RUNNING && pcb->state != NEW && pcb->state != TERMINATED)
 		{
 			i = -1;
 			flag_1 = 0;
 			process_table_node = pcb->data->process_table->head->next;
+			sem_wait(pcb->data->wait);
 			if (pcb->data->terminated != -1 && pcb->data->terminated != pcb->data->last_terminated)
 			{
+				printf("l_ter%d ter%d\n", pcb->data->last_terminated, pcb->data->terminated);
 				pcb->data->last_terminated = pcb->data->terminated;
 				priority = -1;
 				i = -1;
@@ -88,6 +90,7 @@ void	*timequantum_moniter(void *pcb_v)
 						break ;
 				}
 			}
+			sem_post(pcb->data->wait);
 			// if (flag == 1)
 			// {
 			// 	pcb->state = RUNNING;
