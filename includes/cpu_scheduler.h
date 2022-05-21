@@ -106,6 +106,7 @@ typedef struct s_data
 	sem_t			*moniter_wait;
 	int				done;
 	int				terminated;
+	int				last_terminated;
 }	t_data;
 
 void		update_cost_time(t_PCB *pcb);

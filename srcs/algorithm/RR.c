@@ -5,7 +5,7 @@ void	*timequantum_moniter(void *pcb_v)
 	t_PCB *pcb;
 	uint64_t	priority;
 	t_process_table_node	*process_table_node;
-	int	i, j, flag_1, flag_2;
+	int	i, j, flag_1;
 
 	pcb = (t_PCB *)pcb_v;
 	while (1)
@@ -55,17 +55,10 @@ void	*timequantum_moniter(void *pcb_v)
 		{
 			i = -1;
 			flag_1 = 0;
-			flag_2 = 1;
 			process_table_node = pcb->data->process_table->head->next;
-			while (++i < pcb->data->process_cores)
+			if (pcb->data->terminated != -1 && pcb->data->terminated != pcb->data->last_terminated)
 			{
-				if (pcb->user_id != i)
-					flag_2 = flag_2 && (process_table_node->pcb->state == TERMINATED || process_table_node->pcb->state != RUNNING);
-				process_table_node = process_table_node->next;
-				usleep(10);
-			}
-			if (flag_2 == 1)
-			{
+				pcb->data->last_terminated = pcb->data->terminated;
 				priority = -1;
 				i = -1;
 				priority = pcb->data->priority[pcb->data->terminated];
@@ -73,6 +66,8 @@ void	*timequantum_moniter(void *pcb_v)
 				{
 					j = -1;
 					priority++;
+					if (priority == (uint64_t)pcb->data->process_cores)
+						priority = 0;
 					process_table_node = pcb->data->process_table->head->next;
 					while (++j < pcb->data->process_cores)
 					{
