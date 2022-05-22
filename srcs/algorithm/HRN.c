@@ -3,7 +3,7 @@
 // 
 void	*response_rate_moniter(void *pcb_v)
 {
-	t_PCB	*pcb, *pcb_rec;
+	t_PCB	*pcb, *pcb_rec_1, *pcb_rec_2;
 	t_process_table_node	*process_table_node;
 	long double	response_rate, temp;
 	int	i, flag_1, flag_2;
@@ -24,31 +24,35 @@ void	*response_rate_moniter(void *pcb_v)
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
-				if (process_table_node->pcb->state != WAITING)
-				{
-					process_table_node = process_table_node->next;
-					flag_2++;
-					continue ;
-				}
-				else
+				if (process_table_node->pcb->state == WAITING)
 				{
 					printf("id%d state%d\n", process_table_node->pcb->user_id, process_table_node->pcb->state);
 					pcb->data->last_terminated = pcb->data->terminated;
 					response_rate = (((long double)get_time() - (long double)process_table_node->pcb->readyque_arrived_time) + (long double)process_table_node->pcb->burst_time) / (long double)process_table_node->pcb->burst_time;
 					printf("%Lf\n", response_rate);
-					pcb_rec = process_table_node->pcb;
+					pcb_rec_2 = process_table_node->pcb;
 					if (response_rate > temp)
 					{
+						pcb_rec_1 = process_table_node->pcb;
 						temp = response_rate;
 						flag_1 = 1;
 					}
 				}
+				else
+				{
+					flag_2++;
+				}
 				process_table_node = process_table_node->next;
 			}
-			if (flag_1 || flag_2 == pcb->data->process_cores - 1)
+			if (flag_1)
 			{
-				printf("moniter :%d temp: %Lf\n", pcb_rec->user_id, temp);
-				pcb->data->done = pcb_rec->user_id;
+				printf("moniter :%d temp: %Lf\n", pcb_rec_1->user_id, temp);
+				pcb->data->done = pcb_rec_1->user_id;
+			}
+			else if (flag_2 == pcb->data->process_cores - 1)
+			{
+				printf("moniter :%d temp: %Lf\n", pcb_rec_2->user_id, temp);
+				pcb->data->done = pcb_rec_2->user_id;
 			}
 		}
 		else if (pcb->state == WAITING && pcb->data->terminated == -1)
