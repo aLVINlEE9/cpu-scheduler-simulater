@@ -80,7 +80,10 @@ void	option_each_sub(char **argv, int argc, int idx, int type, uint64_t *option,
 	{
 		if (!is_num(argv[idx]))
 			error_print("bad arguments[option](incorrect option)");
-		option[++i] = milli_to_micro(atoi(argv[idx]));
+		if (type != PRIORITY)
+			option[++i] = milli_to_micro(atoi(argv[idx]));
+		else
+			option[++i] = atoi(argv[idx]);
 		idx++;
 	}
 	if (idx != tmp_idx + data->process_cores)

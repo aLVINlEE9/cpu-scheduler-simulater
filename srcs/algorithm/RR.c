@@ -13,8 +13,6 @@ void	*timequantum_moniter(void *pcb_v)
 		sem_wait(pcb->data->moniter_wait);
 		if (pcb->state == RUNNING)
 		{
-			// a = (pcb->cost_time % pcb->time_quantum);
-			// printf("running :%d %lld > %d, %lld <= 500\n", pcb->user_id, pcb->cost_time / pcb->time_quantum, pcb->repeated_times, a);
 			if (pcb->cost_time / pcb->time_quantum > (uint64_t)pcb->repeated_times \
 				&& pcb->cost_time % pcb->time_quantum <= 500)
 			{
@@ -40,7 +38,6 @@ void	*timequantum_moniter(void *pcb_v)
 							process_table_node->pcb->state = RUNNING;
 							pcb->data->done = process_table_node->pcb->user_id;
 							pcb->state = WAITING;
-							printf("id:%d cost:%lld priority:%lld changed to:%d\n", pcb->user_id, pcb->cost_time, process_table_node->pcb->priority, process_table_node->pcb->user_id);
 							break ;
 						}
 						process_table_node = process_table_node->next;
@@ -59,7 +56,6 @@ void	*timequantum_moniter(void *pcb_v)
 			sem_wait(pcb->data->wait);
 			if (pcb->data->terminated != -1 && pcb->data->terminated != pcb->data->last_terminated)
 			{
-				printf("l_ter%d ter%d\n", pcb->data->last_terminated, pcb->data->terminated);
 				pcb->data->last_terminated = pcb->data->terminated;
 				priority = -1;
 				i = -1;
@@ -80,7 +76,6 @@ void	*timequantum_moniter(void *pcb_v)
 							flag_1 = 1;
 							process_table_node->pcb->state = RUNNING;
 							pcb->data->done = process_table_node->pcb->user_id;
-							printf("id:%d cost:%lld priority:%lld changed to:%d\n", pcb->user_id, pcb->cost_time, process_table_node->pcb->priority, process_table_node->pcb->user_id);
 							break ;
 						}
 						process_table_node = process_table_node->next;
@@ -91,12 +86,6 @@ void	*timequantum_moniter(void *pcb_v)
 				}
 			}
 			sem_post(pcb->data->wait);
-			// if (flag == 1)
-			// {
-			// 	pcb->state = RUNNING;
-			// 	pcb->data->done = pcb->user_id;
-			// 	printf("final id:%d cost:%lld\n", pcb->user_id, pcb->cost_time);
-			// }
 		}
 		sem_post(pcb->data->moniter_wait);	
 	}
@@ -104,19 +93,16 @@ void	*timequantum_moniter(void *pcb_v)
 
 void	RR_running(t_PCB *pcb)
 {
-	printf("arrived %d %lld\n", pcb->user_id, pcb->priority);
 	while (1)
 	{
 		update_cost_time(pcb);
 		if (pcb->state == WAITING)
 		{
-			printf("[waiting]id :%d\n", pcb->user_id);
 			sem_post(pcb->data->moniter_wait);
 			sem_post(pcb->data->dispatcher);
 			waiting_zone(pcb->data, pcb->user_id);
 			sem_wait(pcb->data->dispatcher);
 			pcb->running_start = get_time() - pcb->cost_time;
-			printf("[wait out]id :%d\n", pcb->user_id);
 		}
 		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id])
 			break ;
