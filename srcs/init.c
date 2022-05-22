@@ -109,6 +109,7 @@ void	init(int argc, char **argv, t_data *data)
 		data->done = 0;
 		data->terminated = -1;
 		data->last_terminated = -1;
+		data->response_rate = 0;
 		parse_algorithm(argv[1], data);
 		parse_process_cores(argv[2], data);
 		parse_options(argc, argv, data);

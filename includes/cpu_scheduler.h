@@ -107,6 +107,7 @@ typedef struct s_data
 	int				done;
 	int				terminated;
 	int				last_terminated;
+	uint64_t		response_rate;
 }	t_data;
 
 void		update_cost_time(t_PCB *pcb);
