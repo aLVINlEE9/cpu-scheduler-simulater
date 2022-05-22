@@ -24,7 +24,7 @@ void	*response_rate_moniter(void *pcb_v)
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
-				if (process_table_node->pcb->state == WAITING)
+				if (process_table_node->pcb->state == WAITING || process_table_node->pcb->state == RUNNING)
 				{
 					printf("id%d state%d\n", process_table_node->pcb->user_id, process_table_node->pcb->state);
 					pcb->data->last_terminated = pcb->data->terminated;
