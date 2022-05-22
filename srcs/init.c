@@ -12,11 +12,6 @@ void	parse_algorithm(char *argv, t_data *data)
 		data->scheduling_algo = HRN;
 		data->algo_start = HRN_start;
 	}
-	else if (strcmp(argv, "MFQ") == 0)
-	{
-		data->scheduling_algo = MFQ;
-		data->algo_start = MFQ_start;
-	}
 	else if (strcmp(argv, "PS") == 0)
 	{
 		data->scheduling_algo = PS;
@@ -97,16 +92,19 @@ void	init_semaphores(t_data *data)
 	sem_unlink("dispatcher");
 	sem_unlink("wait");
 	sem_unlink("moniter_wait");
+	sem_unlink("stop");
 	data->dispatcher = sem_open("dispatcher", O_CREAT, 0600, 1);
 	data->wait = sem_open("wait", O_CREAT, 0600, 1);
 	data->moniter_wait = sem_open("moniter_wait", O_CREAT, 0600, 1);
+	data->stop = sem_open("stop", O_CREAT, 0600, 1);
 }
 
 void	init(int argc, char **argv, t_data *data)
 {
 	if (argc > 2)
 	{
-		data->done = 0;
+		data->done = -1;
+		// 0 to -1 (changed)
 		data->terminated = -1;
 		data->last_terminated = -1;
 		data->response_rate = 0;

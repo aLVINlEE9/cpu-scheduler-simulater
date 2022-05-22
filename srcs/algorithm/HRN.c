@@ -5,34 +5,54 @@ void	*response_rate_moniter(void *pcb_v)
 {
 	t_PCB	*pcb, *pcb_rec;
 	t_process_table_node	*process_table_node;
-	uint64_t	response_rate, temp;
-	int	i;
+	long double	response_rate, temp;
+	int	i, flag;
 
 	pcb = (t_PCB *)pcb_v;
 	while (1)
 	{
 		sem_wait(pcb->data->moniter_wait);
-		if (pcb->state == WAITING)
+		// printf("ter %d l_ter%d\n", pcb->data->terminated, pcb->data->last_terminated);
+		if (pcb->state == WAITING && pcb->data->terminated != pcb->data->last_terminated)
 		{
+			printf("ter %d l_ter%d\n", pcb->data->terminated, pcb->data->last_terminated);
+			pcb->data->last_terminated = pcb->data->terminated;
 			i = -1;
-			temp = 0;
+			flag = 0;
+			response_rate = 0;
+			temp = 1;
 			process_table_node = pcb->data->process_table->head->next;
 			while (++i < pcb->data->process_cores)
 			{
 				if (process_table_node->pcb->state != WAITING)
+				{
+					process_table_node = process_table_node->next;
 					continue ;
+				}
 				else
 				{
-					response_rate = ((get_time() - process_table_node->pcb->readyque_arrived_time) \
-									+ process_table_node->pcb->burst_time) / process_table_node->pcb->burst_time;
-					if (response_rate >= temp)
+					response_rate = (((long double)get_time() - (long double)process_table_node->pcb->readyque_arrived_time) \
+									+ (long double)process_table_node->pcb->burst_time) / (long double)process_table_node->pcb->burst_time;
+					printf("%Lf\n", response_rate);
+					if (response_rate > temp)
 					{
 						temp = response_rate;
 						pcb_rec = process_table_node->pcb;
+						flag = 1;
 					}
 				}
 				process_table_node = process_table_node->next;
 			}
+			if (flag)
+			{
+				printf("moniter :%d temp: %Lf\n", pcb_rec->user_id, temp);
+				pcb->data->done = pcb_rec->user_id;
+			}
+		}
+		else if (pcb->state == WAITING && pcb->data->terminated == -1)
+		{
+			printf("moniter :%d\n", pcb->user_id);
+			pcb->data->done = pcb->user_id;
 		}
 		sem_post(pcb->data->moniter_wait);
 	}
@@ -41,24 +61,28 @@ void	*response_rate_moniter(void *pcb_v)
 void	HRN_wait(t_data *data, t_PCB *pcb, int id)
 {
 	pcb->state = WAITING;
+	printf("wait in%d\n", id);
 	while (1)
 	{
-		sem_wait(data->moniter_wait);
-		if (data->priority[id] == (uint64_t)data->done)
+		sem_wait(data->stop);
+		if (id == data->done)
 		{
-			data->done += 1;
+			printf("wait done%d\n", id);
+			sem_post(pcb->data->moniter_wait);
 			sem_wait(data->wait);
+			sem_post(data->stop);
 			break ;
 		}
-		sem_post(data->moniter_wait);
+		sem_post(data->stop);
 	}
 	pcb->state = READY;
 	sem_post(data->wait);
-	sem_post(data->moniter_wait);
+	sem_post(data->stop);
 }
 
 void	HRN_running(t_PCB *pcb)
 {
+	printf("run%d\n", pcb->user_id);
 	while (1)
 	{
 		update_cost_time(pcb);

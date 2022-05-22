@@ -15,7 +15,6 @@ SRCS 	=	srcs/main.c				\
 			srcs/util.c				\
 			srcs/algorithm/FCFS.c	\
 			srcs/algorithm/HRN.c	\
-			srcs/algorithm/MFQ.c	\
 			srcs/algorithm/PS.c		\
 			srcs/algorithm/RR.c		\
 			srcs/algorithm/SJF.c	\

@@ -3,8 +3,7 @@
 int	option_check_algo(int type, t_data *data)
 {
 	if (data->scheduling_algo == FCFS || data->scheduling_algo == HRN || \
-		data->scheduling_algo == MFQ || data->scheduling_algo == SJF || \
-		data->scheduling_algo == SRTF)
+		data->scheduling_algo == SJF || data->scheduling_algo == SRTF)
 	{
 		if (type == PRIORITY)
 			return (1);

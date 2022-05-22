@@ -104,6 +104,7 @@ typedef struct s_data
 	sem_t			*dispatcher;
 	sem_t			*wait;
 	sem_t			*moniter_wait;
+	sem_t			*stop;
 	int				done;
 	int				terminated;
 	int				last_terminated;
@@ -119,9 +120,6 @@ int			FCFS(t_data *data);
 
 int			HRN_start(t_data *data, t_process_table_node *process_table_node);
 int 		HRN(t_data *data);
-
-int			MFQ_start(t_data *data, t_process_table_node *process_table_node);
-int			MFQ(t_data *data);
 
 int			PS_start(t_data *data, t_process_table_node *process_table_node);
 int			PS(t_data *data);
