@@ -98,10 +98,13 @@ void	RR_running(t_PCB *pcb)
 		update_cost_time(pcb);
 		if (pcb->state == WAITING)
 		{
+			pcb->wait_start = get_time();
 			sem_post(pcb->data->moniter_wait);
 			sem_post(pcb->data->dispatcher);
 			waiting_zone(pcb->data, pcb->user_id);
 			sem_wait(pcb->data->dispatcher);
+			pcb->wait_start = get_time() - pcb->wait_start;
+			pcb->waiting_time += pcb->wait_start;
 			pcb->running_start = get_time() - pcb->cost_time;
 		}
 		if (pcb->cost_time > pcb->data->burst_time[pcb->user_id])

@@ -59,8 +59,10 @@ typedef struct s_PCB
 	uint64_t		running_start;
 	uint64_t		real_running_start;
 	uint64_t		waiting_time;
+	uint64_t		response_time;
 	uint64_t		turnaround_time;
 	uint64_t		cost_time;
+	uint64_t		wait_start;
 	int				repeated_times;
 }	t_PCB;
 
