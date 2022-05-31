@@ -21,3 +21,5 @@
       : FCFS 5 -b 2 3 10 14 11 -a 0 0 0 0 0
       : RR 3 -b 2 3 10 -a 0 2 4 -t 5
       : PS 3 -pr 3 2 1
+
+# [More Info(KR)](https://github.com/aLVINlEE9/cpu-scheduler-simulater/blob/main/README.pdf)
