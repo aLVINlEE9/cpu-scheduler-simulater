@@ -6,8 +6,7 @@
       3) SRTF
       4) PS
       5) RR
-      6) MFQ
-      7) HRN
+      6) HRN
   
   ## input value
     {algorithm} {process cores} -b {n} {n} ... -a {n} {n} ... -pr {n} {n} ... -t {n} {n} ...
