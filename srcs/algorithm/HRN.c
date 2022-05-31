@@ -25,7 +25,8 @@ void	*response_rate_moniter(void *pcb_v)
 				if (process_table_node->pcb->state == WAITING || process_table_node->pcb->state == RUNNING)
 				{
 					pcb->data->last_terminated = pcb->data->terminated;
-					response_rate = (((long double)get_time() - (long double)process_table_node->pcb->readyque_arrived_time) + (long double)process_table_node->pcb->burst_time) / (long double)process_table_node->pcb->burst_time;
+					response_rate = (((long double)get_time() - (long double)process_table_node->pcb->readyque_arrived_time) + \
+									(long double)process_table_node->pcb->burst_time) / (long double)process_table_node->pcb->burst_time;
 					pcb_rec_2 = process_table_node->pcb;
 					if (response_rate > temp)
 					{

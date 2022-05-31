@@ -45,6 +45,7 @@ int	SJF_start(t_data *data, t_process_table_node *process_table_node)
 
 int	SJF(t_data *data)
 {
+	data->done = 0;
 	sort(data, data->process_table, "SJF");
 	start_process(data);
 	return (0);

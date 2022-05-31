@@ -9,7 +9,7 @@ void	write_log(t_PCB *pcb)
 	pid_ch = ft_itoa((int)pcb->user_id);
 	strcat(dir, pid_ch);
 	fp = fopen(dir, "w");
-	fprintf(fp, "%d %d %lld %lld %lld", pcb->user_id, pcb->pid, pcb->turnaround_time, pcb->response_time, pcb->waiting_time);
+	fprintf(fp, "%d %d %lld %lld %lld", pcb->user_id + 1, pcb->pid, pcb->turnaround_time, pcb->response_time, pcb->waiting_time);
 	fclose(fp);
 }
 
